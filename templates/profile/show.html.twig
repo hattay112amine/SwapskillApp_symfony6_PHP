@@ -1,0 +1,256 @@
+{% extends '@AdminLTE/layout/default-layout.html.twig' %}
+
+{% block logo_mini %}{% endblock %}
+{% block logo_large %}{% endblock %}
+{% block navbar_toggle %}{% endblock %}
+{% block sidebar_search %}{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block page_title %}Profil:{% endblock %}
+{% block page_subtitle %}Informations de l’utilisateur{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('app') }}
+    <style>
+        body {
+            background-color: #f0f2f7;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* TITRE ET SOUS-TITRE CENTRÉS */
+        section.content-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2rem;
+            text-align: center;
+            animation: fadeInDown 0.8s ease;
+        }
+        h1.page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 0.3rem;
+        }
+        p.page-subtitle {
+            font-size: 1.1rem;
+            font-weight: 400;
+            color: #6b7280;
+        }
+
+        /* ANIMATIONS */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in { animation: fadeIn 0.8s ease forwards; }
+        .fade-delay { opacity: 0; animation: fadeIn 0.8s ease forwards; }
+        .fade-delay-1 { animation-delay: 0.1s; }
+        .fade-delay-2 { animation-delay: 0.2s; }
+        .fade-delay-3 { animation-delay: 0.3s; }
+
+        /* CARTES ET PROFIL */
+        .card {
+            border-radius: 1rem;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background: #fff;
+            opacity: 0;
+            animation: fadeIn 0.8s ease forwards;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+        }
+        .profile-user-img {
+            border: 4px solid #fff;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            width: 140px;
+            height: 140px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        .profile-user-img:hover { transform: scale(1.05); }
+
+        h3.profile-username {
+            font-weight: 700;
+            margin-top: 0.5rem;
+            margin-bottom: 0.3rem;
+            color: #1f2937;
+        }
+        p { font-size: 0.95rem; color: #4b5563; }
+
+        /* BOUTON ANIMÉ */
+        .btn-primary {
+            border-radius: 0.5rem;
+            font-weight: 600;
+            padding: 0.55rem 1.4rem;
+            background: linear-gradient(135deg, #4f46e5, #6366f1);
+            border: none;
+            color: #fff;
+            transition: background 0.3s, transform 0.3s;
+        }
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #3730a3, #4f46e5);
+            transform: scale(1.05);
+        }
+
+        /* INFO-BOX */
+        .info-box {
+            border-radius: 0.8rem;
+            background: linear-gradient(135deg, #ffffff, #f9fafb);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            opacity: 0;
+            animation: fadeIn 0.8s ease forwards;
+        }
+        .info-box:hover { transform: translateY(-3px); box-shadow: 0 8px 18px rgba(0,0,0,0.1); }
+        .info-box-icon { font-size: 2rem; display: flex; align-items: center; justify-content: center; color: #fff; }
+        .info-box-icon.bg-info { background: #3b82f6; }
+        .info-box-icon.bg-success { background: #10b981; }
+        .info-box-icon.bg-warning { background: #f59e0b; }
+        .info-box-icon.bg-danger { background: #ef4444; }
+
+        /* BADGES ANIMÉS */
+        .badge {
+            font-size: 0.85rem;
+            padding: 0.45em 0.9em;
+            margin: 0.15em;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            color: #fff !important;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .badge:hover { transform: scale(1.1); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        .badge-success { background: #10b981; }
+        .badge-warning { background: #f59e0b; }
+        .badge-danger { background: #ef4444; }
+
+        .card-header h3 { font-weight: 600; font-size: 1.1rem; }
+        .card-body span, .card-body p, .info-box-content span { color: #374151 !important; font-size: 0.95rem; }
+
+        @media (max-width: 576px) {
+            .profile-user-img { width: 100px; height: 100px; }
+            .btn-primary { padding: 0.45rem 1rem; font-size: 0.85rem; }
+        }
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('app') }}
+    {{ parent() }}
+{% endblock %}
+
+{% block content_header %}
+    <section class="content-header">
+        <h1 class="page-title">{{ block('page_title') }}</h1>
+        <p class="page-subtitle">{{ block('page_subtitle') }}</p>
+    </section>
+{% endblock %}
+
+{% block page_content %}
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+
+            <!-- Carte Profil -->
+            <div class="card text-center p-5 fade-in fade-delay fade-delay-1">
+                <img class="profile-user-img img-circle mx-auto mb-4"
+                     src="{{ user.avatar|default(asset('bundles/adminlte/images/user2-160x160.jpg')) }}"
+                     alt="Photo de {{ user.name|default('Utilisateur') }}">
+                <h3 class="profile-username">{{ user.name|default('Utilisateur') }}</h3>
+                <p>{{ user.bio|default('Aucune bio disponible') }}</p>
+                <a href="{{ path('app_profile_edit') }}" class="btn btn-primary mt-3">
+                    <i class="fas fa-edit"></i> Modifier mon profil
+                </a>
+            </div>
+
+            <!-- Informations générales -->
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <div class="info-box fade-in fade-delay fade-delay-2">
+                        <span class="info-box-icon bg-info"><i class="fas fa-envelope"></i></span>
+                        <div class="info-box-content">
+                            <span class="info-box-text">Email</span>
+                            <span class="info-box-number">{{ user.email|default('Non renseigné') }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="info-box fade-in fade-delay fade-delay-2">
+                        <span class="info-box-icon bg-success"><i class="fas fa-phone"></i></span>
+                        <div class="info-box-content">
+                            <span class="info-box-text">Téléphone</span>
+                            <span class="info-box-number">{{ user.phone|default('Non renseigné') }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Adresse et statut -->
+            <div class="row mt-3">
+                <div class="col-md-6">
+                    <div class="info-box fade-in fade-delay fade-delay-3">
+                        <span class="info-box-icon bg-warning"><i class="fas fa-map-marker-alt"></i></span>
+                        <div class="info-box-content">
+                            <span class="info-box-text">Adresse</span>
+                            <span class="info-box-number">{{ user.adress|default('Non renseigné') }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="info-box fade-in fade-delay fade-delay-3">
+                        <span class="info-box-icon bg-danger"><i class="fas fa-user-check"></i></span>
+                        <div class="info-box-content">
+                            <span class="info-box-text">Statut</span>
+                            {% if user.status is not null %}
+                                {% if user.status %}
+                                    <span class="badge badge-success">Actif</span>
+                                {% else %}
+                                    <span class="badge badge-danger">Inactif</span>
+                                {% endif %}
+                            {% else %}
+                                <span class="badge badge-warning">Non défini</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rôles, Compétences, Date de création : mêmes cartes que avant, on peut ajouter fade-in et delay similaires -->
+            {% for card in ['roles', 'offeredSkill', 'requestedSkill'] %}
+                {% set card_data = attribute(user, card) %}
+                {% set card_title = card == 'roles' ? 'Rôles' : (card == 'offeredSkill' ? 'Compétences offertes' : 'Compétences recherchées') %}
+                {% set card_color = card == 'roles' ? 'bg-primary' : (card == 'offeredSkill' ? 'bg-success' : 'bg-warning') %}
+                <div class="card mt-4 fade-in fade-delay fade-delay-1">
+                    <div class="card-header {{ card_color }} text-white">
+                        <h3 class="card-title"><i class="fas {{ card == 'roles' ? 'fa-user-tag' : (card == 'offeredSkill' ? 'fa-handshake' : 'fa-search') }}"></i> {{ card_title }}</h3>
+                    </div>
+                    <div class="card-body">
+                        {% if card_data %}
+                            {% for item in card_data %}
+                                <span class="badge {{ card == 'roles' ? 'badge-primary' : (card == 'offeredSkill' ? 'badge-success' : 'badge-warning') }}">{{ item }}</span>
+                            {% endfor %}
+                        {% else %}
+                            <span class="text-muted">Aucune {{ card_title|lower }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+
+            <!-- Date de création -->
+            <div class="card text-center mt-4 fade-in fade-delay fade-delay-2">
+                <div class="card-body text-muted">
+                    <i class="fas fa-calendar-alt"></i> Créé le : {{ user.createdAt ? user.createdAt|date('d/m/Y H:i') : 'Non défini' }}
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}

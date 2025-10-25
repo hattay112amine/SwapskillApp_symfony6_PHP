@@ -1,4 +1,7 @@
 import './bootstrap.js';
+import 'admin-lte/dist/css/adminlte.min.css';
+import 'admin-lte/dist/js/adminlte.min.js';
+
 /*
  * Welcome to your app's main JavaScript file!
  *
