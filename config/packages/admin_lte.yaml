@@ -1,0 +1,19 @@
+admin_lte:
+  theme:
+    button:
+      type: primary
+      size: md
+    widget:
+      type: card
+
+  options:
+    fixed_layout: false
+    boxed_layout: false
+    collapsed_sidebar: false
+    mini_sidebar: false
+
+  knp_menu:
+    enable: false
+
+  routes:
+    adminlte_profile: profile
