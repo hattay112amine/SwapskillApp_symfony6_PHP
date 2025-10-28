@@ -44,6 +44,7 @@ final class ProfileController extends AbstractController
     public function edit(Request $request, EntityManagerInterface $em, SluggerInterface $slugger)
     {
         // Simuler un utilisateur complet
+        //$this->getUser();
         $user = new User();
         $user->setName('Amine Test')
             ->setEmail('amine@test.com')
