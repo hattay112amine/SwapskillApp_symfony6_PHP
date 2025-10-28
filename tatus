@@ -1,0 +1,30 @@
+*   [33m77ae4ef6[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m Conserver mes fichiers locaux et finaliser le merge
+[31m|[m[32m\[m  
+[31m|[m *   [33m65bd4e0a[m[33m ([m[1;31morigin/main[m[33m)[m Merge pull request #1 from hattay112amine/feature/edit-profile
+[31m|[m [33m|[m[34m\[m  
+[31m|[m * [34m|[m [33m97730f34[m Initial commit du projet
+[31m|[m [34m|[m [34m|[m * [33m6d78c8d6[m[33m ([m[1;35mrefs/stash[m[33m)[m On main: Sauvegarde avant pull
+[31m|[m [34m|[m[31m_[m[34m|[m[31m/[m[36m|[m 
+[31m|[m[31m/[m[34m|[m [34m|[m [36m|[m 
+[31m|[m [34m|[m [34m|[m * [33m1915b4c2[m index on main: 4b3949b7 Ajout de registre backend et frontend
+[31m|[m [34m|[m[31m_[m[34m|[m[31m/[m  
+[31m|[m[31m/[m[34m|[m [34m|[m   
+[31m|[m [34m|[m [34m|[m *   [33m0db678f7[m[33m ([m[1;31morigin/feature/edit-profile[m[33m, [m[1;32mfeature/edit-profile[m[33m)[m Accepte les versions du dépôt eya/main
+[31m|[m [34m|[m [34m|[m [1;31m|[m[31m\[m  
+[31m|[m [34m|[m[31m_[m[34m|[m[31m_[m[1;31m|[m[31m/[m  
+[31m|[m[31m/[m[34m|[m [34m|[m [1;31m|[m   
+* [34m|[m [34m|[m [1;31m|[m [33m4b3949b7[m[33m ([m[1;31meya/main[m[33m)[m Ajout de registre backend et frontend
+* [34m|[m [34m|[m [1;31m|[m [33m05a05539[m Add Google OAuth login, role-based dashboards, login template
+[34m|[m[34m/[m [34m/[m [1;31m/[m  
+* [34m|[m [1;31m|[m   [33m04f9573e[m[33m ([m[1;32mUser-profile[m[33m)[m Merge pull request #1 from eya-amri/dev
+[1;33m|[m[1;34m\[m [34m\[m [1;31m\[m  
+[1;33m|[m [1;34m|[m [34m|[m * [33mff2df5e7[m Sauvegarde avant pull
+[1;33m|[m [1;34m|[m [34m|[m[34m/[m  
+[1;33m|[m [1;34m|[m [34m|[m * [33ma041cc88[m[33m ([m[1;31meya/dev[m[33m)[m Merge pull request #3 from eya-amri/feature/edit-profile
+[1;33m|[m [1;34m|[m [34m|[m[1;34m/[m[34m|[m 
+[1;33m|[m [1;34m|[m[1;34m/[m[34m|[m[34m/[m  
+[1;33m|[m [1;34m|[m * [33m798e6006[m[33m ([m[1;31meya/feature/edit-profile[m[33m)[m Ajout de la modification du profil
+[1;33m|[m [1;34m|[m[1;34m/[m  
+[1;33m|[m * [33m03d4f089[m[33m ([m[1;32mdev[m[33m)[m Création de la base de données sur branche dev
+[1;33m|[m[1;33m/[m  
+* [33m4a356319[m Premier commit

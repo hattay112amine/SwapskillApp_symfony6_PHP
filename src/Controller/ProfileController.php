@@ -15,24 +15,11 @@ use App\Form\UserType;
 final class ProfileController extends AbstractController
 {
     #[Route('/profile', name: 'app_profile')]
-    // #[IsGranted('ROLE_USER')] // commenter pour tester
+    #[IsGranted('ROLE_USER')] // commenter pour tester
     public function index(): \Symfony\Component\HttpFoundation\Response
     {
-        // Simuler un utilisateur complet
-        $user = new User();
-        $user->setName('Amine Test')
-            ->setEmail('amine@test.com')
-            ->setPhone('12345678')
-            ->setBio('Bio de test')
-            ->setAdress('Adresse test')
-            ->setRoles(['ROLE_USER'])
-            ->setStatus(true)
-            ->setOfferedSkill(['PHP', 'Symfony'])
-            ->setRequestedSkill(['JavaScript'])
-            ->setCreatedAt(new \DateTime());
 
-        // Pour récupérer l'utilisateur réel depuis la DB, enlever le commentaire :
-        // $user = $this->getUser();
+        $user = $this->getUser();
 
         return $this->render('profile/show.html.twig', [
             'user' => $user,
@@ -40,22 +27,11 @@ final class ProfileController extends AbstractController
     }
 
     #[Route('/profile/edit', name: 'app_profile_edit')]
-    // #[IsGranted('ROLE_USER')] // commenter pour tester
+    #[IsGranted('ROLE_USER')] // commenter pour tester
     public function edit(Request $request, EntityManagerInterface $em, SluggerInterface $slugger)
     {
-        // Simuler un utilisateur complet
-        $user = new User();
-        $user->setName('Amine Test')
-            ->setEmail('amine@test.com')
-            ->setPhone('12345678')
-            ->setBio('Bio de test')
-            ->setAdress('Adresse test')
-            ->setRoles(['ROLE_USER'])
-            ->setStatus(true)
-            ->setOfferedSkill(['PHP', 'Symfony'])
-            ->setRequestedSkill(['JavaScript'])
-            ->setCreatedAt(new \DateTime());
 
+        $user = $this->getUser();
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
