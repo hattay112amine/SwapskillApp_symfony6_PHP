@@ -1,0 +1,240 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier le profil{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        body {
+            background-color: #f0f2f7;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .form-container {
+            max-width: 700px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: #fff;
+            border-radius: 1rem;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #1f2937;
+            font-weight: 700;
+            animation: fadeSlide 0.8s ease forwards;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+            opacity: 0;
+            transform: translateY(15px);
+            animation: fadeSlide 0.6s ease forwards;
+        }
+
+        .form-group:nth-child(1) { animation-delay: 0.1s; }
+        .form-group:nth-child(2) { animation-delay: 0.2s; }
+        .form-group:nth-child(3) { animation-delay: 0.3s; }
+        .form-group:nth-child(4) { animation-delay: 0.4s; }
+        .form-group:nth-child(5) { animation-delay: 0.5s; }
+        .form-group:nth-child(6) { animation-delay: 0.6s; }
+
+        label {
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .form-control {
+            border-radius: 0.5rem;
+            border: 1px solid #d1d5db;
+            padding: 0.55rem 1rem;
+            transition: border 0.3s, box-shadow 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 0.2rem rgba(79, 70, 229, 0.25);
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 0.6rem;
+            font-weight: 600;
+            border-radius: 0.5rem;
+            background: linear-gradient(135deg, #4f46e5, #6366f1);
+            border: none;
+            color: #fff;
+            transition: transform 0.3s, background 0.3s;
+            margin-top: 1rem;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.03);
+            background: linear-gradient(135deg, #3730a3, #4f46e5);
+        }
+
+        .back-link {
+            display: block;
+            margin-top: 1.5rem;
+            text-align: center;
+            color: #4f46e5;
+            font-weight: 500;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .back-link:hover {
+            color: #3730a3;
+        }
+
+        /* Prévisualisation photo */
+        .preview-img {
+            display: block;
+            margin: 1rem auto;
+            max-width: 150px;
+            max-height: 150px;
+            border-radius: 50%;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            object-fit: cover;
+        }
+
+        @keyframes fadeSlide {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 576px) {
+            .form-container { padding: 1.5rem; }
+        }
+
+        .skill-item .form-control {
+            flex: 1;
+        }
+        .skill-item .btn {
+            margin-left: 0.5rem;
+        }
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Prévisualisation de la photo
+            const photoInput = document.querySelector('#{{ form.photo.vars.id }}');
+            if(photoInput) {
+                const preview = document.createElement('img');
+                preview.classList.add('preview-img');
+                photoInput.parentNode.insertBefore(preview, photoInput.nextSibling);
+
+                photoInput.addEventListener('change', function() {
+                    const file = this.files[0];
+                    if(file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            preview.src = e.target.result;
+                        }
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+
+            // Gestion des collections (offeredSkill et requestedSkill)
+            function initCollection(containerId, addButtonId, prototype) {
+                const container = document.getElementById(containerId);
+                let index = container.children.length;
+
+                document.getElementById(addButtonId).addEventListener('click', function() {
+                    let newForm = prototype.replace(/__name__/g, index);
+                    const div = document.createElement('div');
+                    div.classList.add('skill-item', 'mb-2', 'd-flex');
+                    div.innerHTML = newForm + '<button type="button" class="btn btn-danger remove-skill">×</button>';
+                    container.appendChild(div);
+                    index++;
+                });
+
+                container.addEventListener('click', function(e) {
+                    if(e.target && e.target.classList.contains('remove-skill')) {
+                        e.target.parentNode.remove();
+                    }
+                });
+            }
+
+            const offeredPrototype = `{{ form_widget(form.offeredSkill.vars.prototype)|e('js') }}`;
+            const requestedPrototype = `{{ form_widget(form.requestedSkill.vars.prototype)|e('js') }}`;
+
+            initCollection('offeredSkills-container', 'add-offeredSkill', offeredPrototype);
+            initCollection('requestedSkills-container', 'add-requestedSkill', requestedPrototype);
+        });
+    </script>
+{% endblock %}
+
+{% block body %}
+    <div class="form-container">
+        <h1>Modifier le profil</h1>
+
+        {{ form_start(form) }}
+
+        <div class="row">
+            <div class="col-md-6">
+                {{ form_row(form.name, {'attr': {'class':'form-control'}}) }}
+            </div>
+            <div class="col-md-6">
+                {{ form_row(form.email, {'attr': {'class':'form-control'}}) }}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                {{ form_row(form.phone, {'attr': {'class':'form-control'}}) }}
+            </div>
+            <div class="col-md-6">
+                {{ form_row(form.adress, {'attr': {'class':'form-control'}}) }}
+            </div>
+        </div>
+
+        {{ form_row(form.bio, {'attr': {'class':'form-control'}}) }}
+        {{ form_row(form.photo, {'attr': {'class':'form-control'}}) }}
+
+        {% if form.roles is defined %}{{ form_row(form.roles, {'attr': {'class':'form-control'}}) }}{% endif %}
+        {% if form.status is defined %}{{ form_row(form.status, {'attr': {'class':'form-control'}}) }}{% endif %}
+
+        {# Offered Skills #}
+        <div class="mb-3">
+            <label>Compétences offertes</label>
+            <div id="offeredSkills-container">
+                {% for skill in form.offeredSkill %}
+                    <div class="skill-item mb-2 d-flex">
+                        {{ form_widget(skill, {'attr': {'class':'form-control me-2'}}) }}
+                        <button type="button" class="btn btn-danger remove-skill">×</button>
+                    </div>
+                {% endfor %}
+            </div>
+            <button type="button" id="add-offeredSkill" class="btn btn-sm btn-success mt-1">+ Ajouter</button>
+        </div>
+
+        {# Requested Skills #}
+        <div class="mb-3">
+            <label>Compétences recherchées</label>
+            <div id="requestedSkills-container">
+                {% for skill in form.requestedSkill %}
+                    <div class="skill-item mb-2 d-flex">
+                        {{ form_widget(skill, {'attr': {'class':'form-control me-2'}}) }}
+                        <button type="button" class="btn btn-danger remove-skill">×</button>
+                    </div>
+                {% endfor %}
+            </div>
+            <button type="button" id="add-requestedSkill" class="btn btn-sm btn-success mt-1">+ Ajouter</button>
+        </div>
+
+        {% if form.createdAt is defined %}{{ form_row(form.createdAt, {'attr': {'class':'form-control'}}) }}{% endif %}
+
+        <button type="submit" class="btn btn-primary">Enregistrer</button>
+        {{ form_end(form) }}
+
+        <a href="{{ path('app_profile') }}" class="back-link">← Retour au profil</a>
+    </div>
+{% endblock %}
