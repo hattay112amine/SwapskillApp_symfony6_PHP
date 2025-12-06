@@ -37,10 +37,7 @@ final class ProfileController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            // ======================
-            // Gestion de l'upload de photo (commentée pour l'instant)
-            // ======================
-            /*
+            // Gestion de l'upload de photo
             $photoFile = $form->get('photo')->getData();
             if ($photoFile) {
                 $originalFilename = pathinfo($photoFile->getClientOriginalName(), PATHINFO_FILENAME);
@@ -58,8 +55,6 @@ final class ProfileController extends AbstractController
 
                 $user->setPhoto($newFilename);
             }
-            */
-
             $em->flush();
             $this->addFlash('success', 'Profil mis à jour avec succès');
             return $this->redirectToRoute('app_profile');

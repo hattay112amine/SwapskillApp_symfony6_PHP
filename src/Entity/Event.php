@@ -15,8 +15,10 @@ class Event
 
     // Relation ManyToOne vers User (organisateur)
     #[ORM\ManyToOne(targetEntity: User::class)]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true, onDelete: "SET NULL")]
     private ?User $organizer = null;
+
+
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
@@ -41,9 +43,22 @@ class Event
     #[ORM\Column(nullable: true)]
     private ?\DateTime $createdAt = null;
 
+    // ---------------- GETTERS & SETTERS ---------------- //
+
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getOrganizer(): ?User
+    {
+        return $this->organizer;
+    }
+
+    public function setOrganizer(?User $organizer): static
+    {
+        $this->organizer = $organizer;
+        return $this;
     }
 
     public function getTitle(): ?string
@@ -54,7 +69,6 @@ class Event
     public function setTitle(string $title): static
     {
         $this->title = $title;
-
         return $this;
     }
 
@@ -66,7 +80,6 @@ class Event
     public function setDescription(?string $description): static
     {
         $this->description = $description;
-
         return $this;
     }
 
@@ -78,7 +91,6 @@ class Event
     public function setType(string $type): static
     {
         $this->type = $type;
-
         return $this;
     }
 
@@ -90,7 +102,6 @@ class Event
     public function setDate(?\DateTime $date): static
     {
         $this->date = $date;
-
         return $this;
     }
 
@@ -102,7 +113,6 @@ class Event
     public function setLocation(?string $location): static
     {
         $this->location = $location;
-
         return $this;
     }
 
@@ -114,7 +124,6 @@ class Event
     public function setPrice(?float $price): static
     {
         $this->price = $price;
-
         return $this;
     }
 
@@ -126,7 +135,6 @@ class Event
     public function setCapacity(?int $capacity): static
     {
         $this->capacity = $capacity;
-
         return $this;
     }
 
@@ -138,7 +146,6 @@ class Event
     public function setCreatedAt(?\DateTime $createdAt): static
     {
         $this->createdAt = $createdAt;
-
         return $this;
     }
 }

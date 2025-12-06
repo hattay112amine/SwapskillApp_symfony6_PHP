@@ -218,7 +218,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // Clear temporary sensitive data if any
     }
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $photo = null;
 
+    public function getPhoto(): ?string
+    {
+        return $this->photo;
+    }
 
+    public function setPhoto(?string $photo): self
+    {
+        $this->photo = $photo;
+        return $this;
+    }
 
 }
