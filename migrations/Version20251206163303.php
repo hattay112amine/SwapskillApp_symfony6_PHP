@@ -1,0 +1,39 @@
+<?php
+
+declare(strict_types=1);
+
+namespace DoctrineMigrations;
+
+use Doctrine\DBAL\Schema\Schema;
+use Doctrine\Migrations\AbstractMigration;
+
+/**
+ * Auto-generated Migration: Please modify to your needs!
+ */
+final class Version20251206163303 extends AbstractMigration
+{
+    public function getDescription(): string
+    {
+        return '';
+    }
+
+    public function up(Schema $schema): void
+    {
+        // this up() migration is auto-generated, please modify it to your needs
+        $this->addSql('ALTER TABLE rating DROP FOREIGN KEY FK_D88926222130303A');
+        $this->addSql('ALTER TABLE rating DROP FOREIGN KEY FK_D889262229F6EE60');
+        $this->addSql('ALTER TABLE rating CHANGE from_user_id from_user_id INT DEFAULT NULL, CHANGE to_user_id to_user_id INT DEFAULT NULL');
+        $this->addSql('ALTER TABLE rating ADD CONSTRAINT FK_D88926222130303A FOREIGN KEY (from_user_id) REFERENCES user (id) ON DELETE SET NULL');
+        $this->addSql('ALTER TABLE rating ADD CONSTRAINT FK_D889262229F6EE60 FOREIGN KEY (to_user_id) REFERENCES user (id) ON DELETE SET NULL');
+    }
+
+    public function down(Schema $schema): void
+    {
+        // this down() migration is auto-generated, please modify it to your needs
+        $this->addSql('ALTER TABLE rating DROP FOREIGN KEY FK_D88926222130303A');
+        $this->addSql('ALTER TABLE rating DROP FOREIGN KEY FK_D889262229F6EE60');
+        $this->addSql('ALTER TABLE rating CHANGE from_user_id from_user_id INT NOT NULL, CHANGE to_user_id to_user_id INT NOT NULL');
+        $this->addSql('ALTER TABLE rating ADD CONSTRAINT FK_D88926222130303A FOREIGN KEY (from_user_id) REFERENCES user (id) ON UPDATE NO ACTION ON DELETE NO ACTION');
+        $this->addSql('ALTER TABLE rating ADD CONSTRAINT FK_D889262229F6EE60 FOREIGN KEY (to_user_id) REFERENCES user (id) ON UPDATE NO ACTION ON DELETE NO ACTION');
+    }
+}
