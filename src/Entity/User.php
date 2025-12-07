@@ -437,6 +437,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $photo = null;
+
+    public function getPhoto(): ?string
+    {
+        return $this->photo;
+    }
+
+    public function setPhoto(?string $photo): static
+    {
+        $this->photo = $photo;
+        return $this;
+    }
 
     /**
      * @return Collection<int, Skill>
@@ -468,6 +481,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    #[ORM\Column(type: Types::ARRAY, nullable: true)]
+    private ?array $offeredSkill = null;
+
+
+
+    #[ORM\Column(type: Types::ARRAY, nullable: true)]
+    private ?array $requestedSkill = null;
+
+    public function getOfferedSkill(): ?array
+    {
+        return $this->offeredSkill;
+    }
+
+    public function setOfferedSkill(?array $offeredSkill): static
+    {
+        $this->offeredSkill = $offeredSkill;
+        return $this;
+    }
+
+    public function getRequestedSkill(): ?array
+    {
+        return $this->requestedSkill;
+    }
+
+    public function setRequestedSkill(?array $requestedSkill): static
+    {
+        $this->requestedSkill = $requestedSkill;
+        return $this;
+    }
 
 
 }
