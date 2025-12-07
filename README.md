@@ -1,3 +1,7 @@
+### Démo du projet
+[Regarder la vidéo](https://drive.google.com/drive/folders/0AGsZrV4bbWUMUk9PVA)
+<img width="1919" height="1036" alt="image" src="https://github.com/user-attachments/assets/875b90dd-668b-48b2-af7c-14c01b80191f" />
+
 🟦 SwapSkillApp – Plateforme d’échange de compétences (Symfony)
 
 SwapSkillApp est une application web développée avec Symfony permettant aux utilisateurs d’échanger des compétences, d’organiser des événements, de discuter via une messagerie interne et de s’évaluer après chaque échange.
