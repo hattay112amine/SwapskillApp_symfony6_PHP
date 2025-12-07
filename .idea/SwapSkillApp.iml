@@ -146,7 +146,10 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/psr/http-message" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/ralouphie/getallheaders" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/sebastian/resource-operations" />
+<<<<<<< HEAD
       <excludeFolder url="file://$MODULE_DIR$/vendor/twig/string-extra" />
+=======
+>>>>>>> origin/feature/edit-profile
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

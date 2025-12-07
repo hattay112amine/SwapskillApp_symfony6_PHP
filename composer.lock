@@ -4,7 +4,11 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
+<<<<<<< HEAD
     "content-hash": "19e35ecea0727fc9108540b0d0355bd7",
+=======
+    "content-hash": "9d5b59fb54704de269e66b93b043553a",
+>>>>>>> origin/feature/edit-profile
     "packages": [
         {
             "name": "composer/semver",
@@ -8267,6 +8271,7 @@
             "time": "2025-07-10T08:14:14+00:00"
         },
         {
+<<<<<<< HEAD
             "name": "symfony/webpack-encore-bundle",
             "version": "v2.4.0",
             "source": {
@@ -8343,6 +8348,8 @@
             "time": "2025-11-27T13:41:46+00:00"
         },
         {
+=======
+>>>>>>> origin/feature/edit-profile
             "name": "symfony/yaml",
             "version": "v6.4.26",
             "source": {

@@ -30,6 +30,22 @@ final class ProfileController extends AbstractController
     #[IsGranted('ROLE_USER')] // commenter pour tester
     public function edit(Request $request, EntityManagerInterface $em, SluggerInterface $slugger)
     {
+<<<<<<< HEAD
+=======
+        // Simuler un utilisateur complet
+        //$this->getUser();
+        $user = new User();
+        $user->setName('Amine Test')
+            ->setEmail('amine@test.com')
+            ->setPhone('12345678')
+            ->setBio('Bio de test')
+            ->setAdress('Adresse test')
+            ->setRoles(['ROLE_USER'])
+            ->setStatus(true)
+            ->setOfferedSkill(['PHP', 'Symfony'])
+            ->setRequestedSkill(['JavaScript'])
+            ->setCreatedAt(new \DateTime());
+>>>>>>> origin/feature/edit-profile
 
         $user = $this->getUser();
         $form = $this->createForm(UserType::class, $user);

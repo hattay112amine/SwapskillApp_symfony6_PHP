@@ -47,6 +47,7 @@
             "./migrations/.gitignore"
         ]
     },
+<<<<<<< HEAD
     "kevinpapst/adminlte-bundle": {
         "version": "3.6",
         "recipe": {
@@ -59,6 +60,8 @@
             "./config/packages/admin_lte.yaml"
         ]
     },
+=======
+>>>>>>> origin/feature/edit-profile
     "knpuniversity/oauth2-client-bundle": {
         "version": "2.19",
         "recipe": {
@@ -324,22 +327,6 @@
         },
         "files": [
             "./config/packages/messenger.yaml"
-        ]
-    },
-    "symfony/webpack-encore-bundle": {
-        "version": "2.3",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "main",
-            "version": "2.0",
-            "ref": "9ef5412a4a2a8415aca3a3f2b4edd3866aab9a19"
-        },
-        "files": [
-            "./assets/app.js",
-            "./assets/styles/app.css",
-            "./config/packages/webpack_encore.yaml",
-            "./package.json",
-            "./webpack.config.js"
         ]
     },
     "twig/extra-bundle": {
