@@ -19,7 +19,7 @@ class ExchangeController extends AbstractController
     {
         $user = $this->getUser();
 
-        // Proposals where user is requester
+        // 1. Proposals YOU MADE (You are the Requester)
         $madeProposals = $em->getRepository(ExchangeProposal::class)
             ->createQueryBuilder('e')
             ->where('e.requester = :user')
@@ -27,11 +27,10 @@ class ExchangeController extends AbstractController
             ->getQuery()
             ->getResult();
 
-        // Proposals where user owns the offered skill
+        // 2. Proposals YOU RECEIVED (You are the Receiver)
         $receivedProposals = $em->getRepository(ExchangeProposal::class)
             ->createQueryBuilder('e')
-            ->join('e.offeredSkill', 's')
-            ->where('s.owner = :user')
+            ->where('e.receiver = :user') // *** CORRECTED LINE: Use the dedicated 'receiver' field ***
             ->setParameter('user', $user)
             ->getQuery()
             ->getResult();
@@ -46,6 +45,38 @@ class ExchangeController extends AbstractController
             'notifications' => $notifications,
         ]);
     }
+//    #[Route('/exchange/listofproposals', name: 'listofproposals')]
+//    public function dashboard(EntityManagerInterface $em): Response
+//    {
+//        $user = $this->getUser();
+//
+//        // Proposals where user is requester
+//        $madeProposals = $em->getRepository(ExchangeProposal::class)
+//            ->createQueryBuilder('e')
+//            ->where('e.requester = :user')
+//            ->setParameter('user', $user)
+//            ->getQuery()
+//            ->getResult();
+//
+//        // Proposals where user owns the offered skill
+//        $receivedProposals = $em->getRepository(ExchangeProposal::class)
+//            ->createQueryBuilder('e')
+//            ->join('e.offeredSkill', 's')
+//            ->where('s.owner = :user')
+//            ->setParameter('user', $user)
+//            ->getQuery()
+//            ->getResult();
+//
+//        // Notifications
+//        $notifications = $em->getRepository(Notification::class)
+//            ->findBy(['user' => $user, 'isRead' => false], ['createdAt' => 'DESC']);
+//
+//        return $this->render('exchange/listofproposals.html.twig', [
+//            'madeProposals' => $madeProposals,
+//            'receivedProposals' => $receivedProposals,
+//            'notifications' => $notifications,
+//        ]);
+//    }
     #[Route('/exchange/propose', name: 'exchange_propose')]
     public function propose(Request $request, EntityManagerInterface $em): Response
     {

@@ -23,14 +23,66 @@ class Notification
     #[ORM\Column(type: 'datetime', nullable: true)]
     private ?\DateTimeInterface $createdAt = null;
 
-
-    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\ManyToOne(inversedBy: 'notifications')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
     #[ORM\ManyToOne(targetEntity: ExchangeProposal::class)]
     #[ORM\JoinColumn(nullable: true)]
     private ?ExchangeProposal $proposal = null;
+
+    #[ORM\Column(type: Types::TEXT)]
+    private ?string $content = null;
+
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(?string $type): static
+    {
+        $this->type = $type;
+        return $this;
+    }
+
+    public function isRead(): ?bool
+    {
+        return $this->isRead;
+    }
+
+    public function setIsRead(?bool $isRead): static
+    {
+        $this->isRead = $isRead;
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(?\DateTimeInterface $createdAt): static
+    {
+        $this->createdAt = $createdAt;
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
+        return $this;
+    }
 
     public function getProposal(): ?ExchangeProposal
     {
@@ -43,90 +95,6 @@ class Notification
         return $this;
     }
 
-
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(User $user): static
-    {
-        $this->user = $user;
-        return $this;
-    }
-
-
-    #[ORM\ManyToOne(inversedBy: 'notifications')]
-    private ?User $user = null;
-
-    #[ORM\Column(type: Types::TEXT)]
-    private ?string $content = null;
-
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    public function getOd(): ?int
-    {
-        return $this->od;
-    }
-
-    public function setOd(int $od): static
-    {
-        $this->od = $od;
-
-        return $this;
-    }
-
-    public function getType(): ?string
-    {
-        return $this->type;
-    }
-
-    public function setType(?string $type): static
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    public function isRead(): ?bool
-    {
-        return $this->isRead;
-    }
-
-    public function setIsRead(?bool $isRead): static
-    {
-        $this->isRead = $isRead;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTime
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(?\DateTime $createdAt): static
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): static
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
     public function getContent(): ?string
     {
         return $this->content;
@@ -135,7 +103,6 @@ class Notification
     public function setContent(string $content): static
     {
         $this->content = $content;
-
         return $this;
     }
 }

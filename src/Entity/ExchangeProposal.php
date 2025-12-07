@@ -4,7 +4,8 @@ namespace App\Entity;
 
 use App\Repository\ExchangeProposalRepository;
 use Doctrine\ORM\Mapping as ORM;
-
+use Doctrine\Common\Collections\ArrayCollection; // <-- ADD THIS IMPORT
+use Doctrine\Common\Collections\Collection;
 #[ORM\Entity(repositoryClass: ExchangeProposalRepository::class)]
 //#[ORM\Table(name: "exchange_proposal")]
 class ExchangeProposal
@@ -41,7 +42,49 @@ class ExchangeProposal
     #[ORM\JoinColumn(nullable: false)]
     private ?User $receiver = null;
 
+    #[ORM\OneToMany(mappedBy: "exchangeProposal", targetEntity: Message::class)]
+    private Collection $messages;
 
+    #[ORM\OneToMany(mappedBy: 'exchangeProposal', targetEntity: Rating::class)]
+    private Collection $ratings;
+
+    public function __construct()
+    {
+        $this->ratings = new ArrayCollection();
+        $this->messages = new ArrayCollection();
+    }
+    /**
+     * @return Collection<int, Rating>
+     */
+    public function getRatings(): Collection
+    {
+        return $this->ratings;
+    }
+
+    // You should also add the addRating and removeRating methods
+    // if you haven't already:
+
+    public function addRating(Rating $rating): static
+    {
+        if (!$this->ratings->contains($rating)) {
+            $this->ratings->add($rating);
+            $rating->setExchangeProposal($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRating(Rating $rating): static
+    {
+        if ($this->ratings->removeElement($rating)) {
+            // set the owning side to null (unless already changed)
+            if ($rating->getExchangeProposal() === $this) {
+                $rating->setExchangeProposal(null);
+            }
+        }
+
+        return $this;
+    }
     public function getReceiver(): ?User
     {
         return $this->receiver;
@@ -126,4 +169,5 @@ class ExchangeProposal
 
         return $this;
     }
+
 }

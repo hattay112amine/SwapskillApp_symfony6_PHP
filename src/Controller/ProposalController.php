@@ -50,12 +50,12 @@ class ProposalController extends AbstractController
         $notification->setType('accepted');
         $notification->setIsRead(false);
         $notification->setCreatedAt(new \DateTime());
+        $notification->setContent('Your proposal has been accepted!');
 
         $em->persist($notification);
         $em->flush();
 
         $this->addFlash('success', 'Proposal accepted successfully!');
-//        return $this->redirectToRoute('user_dashboard');
         return $this->redirectToRoute('listofproposals');
     }
 
@@ -72,12 +72,28 @@ class ProposalController extends AbstractController
         $notification->setType('refused');
         $notification->setIsRead(false);
         $notification->setCreatedAt(new \DateTime());
+        $notification->setContent('Your proposal has been refused!');
 
         $em->persist($notification);
         $em->flush();
 
         $this->addFlash('danger', 'Proposal refused.');
-//        return $this->redirectToRoute('user_dashboard');
+        return $this->redirectToRoute('listofproposals');
+    }
+    #[Route('/proposal/complete/{id}', name: 'proposal_complete')]
+    public function completeProposal(ExchangeProposal $proposal, EntityManagerInterface $em): RedirectResponse
+    {
+        // Add authorization check: only requester or receiver can mark as complete
+        $currentUser = $this->getUser();
+        if ($proposal->getRequester() !== $currentUser && $proposal->getReceiver() !== $currentUser) {
+            throw $this->createAccessDeniedException('You cannot complete this exchange.');
+        }
+
+        $proposal->setStatus('completed'); // *** New Status ***
+        $em->persist($proposal);
+        $em->flush();
+
+        $this->addFlash('success', 'Exchange marked as completed! Please rate your partner below.');
         return $this->redirectToRoute('listofproposals');
     }
 

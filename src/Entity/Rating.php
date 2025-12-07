@@ -32,6 +32,23 @@ class Rating
     #[ORM\Column(nullable: true)]
     private ?\DateTime $createdAt = null;
 
+    #[ORM\ManyToOne(targetEntity: ExchangeProposal::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?ExchangeProposal $exchangeProposal = null;
+
+    // ... add getter and setter below
+
+    public function getExchangeProposal(): ?ExchangeProposal
+    {
+        return $this->exchangeProposal;
+    }
+
+    public function setExchangeProposal(?ExchangeProposal $exchangeProposal): static
+    {
+        $this->exchangeProposal = $exchangeProposal;
+        return $this;
+    }
+
 
     public function getId(): ?int
     {

@@ -50,6 +50,17 @@
                                     </a>
                                 </div>
 
+                                {# START OF NEW LOGIC #}
+                                {% if proposal.status == 'accepted' %}
+                                    <hr>
+                                    <p class="mt-2 mb-1">Exchange Finished?</p>
+                                    <a href="{{ path('proposal_complete', {'id': proposal.id}) }}" class="btn btn-info btn-sm w-100">
+                                        <i class="bi bi-check-circle-fill me-1"></i> Mark as Complete
+                                    </a>
+                                {% endif %}
+                                {# END OF NEW LOGIC #}
+
+
                             {% elseif proposal.status == 'refused' %}
                                 <span class="badge bg-danger mt-2">Refused</span>
 
@@ -96,14 +107,52 @@
                                 <span class="badge bg-success mt-2">Accepted</span>
 
                                 <div class="mt-3">
-                                    <p><strong>Start Exchange Session:</strong></p>
+                                    <p><strong>Schedule Exchange Session:</strong></p>
                                     <a href="{{ path('chat_session', {'proposalId': proposal.id}) }}" class="btn btn-primary btn-sm">
                                         Go to Chat & Schedule
                                     </a>
                                 </div>
 
+                                <hr>
+                                <a href="{{ path('proposal_complete', {'id': proposal.id}) }}" class="btn btn-info btn-sm w-100">
+                                    <i class="bi bi-check-circle-fill me-1"></i> Mark as Complete
+                                </a>
+
+                            {% elseif proposal.status == 'completed' %}
+                                <span class="badge bg-dark mt-2">Exchange Completed!</span>
+
+                                {# CHECK 1: See if the current user (the Requester) has already submitted a rating #}
+                                {% set rated = false %}
+                                {% for rating in proposal.ratings %}
+                                    {# Check if the rating was made by the current user (app.user) #}
+                                    {% if rating.fromUser.id == app.user.id %}
+                                        {% set rated = true %}
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% if not rated %}
+                                    <div class="mt-3">
+                                        <a href="{{ path('exchange_rate', {'id': proposal.id}) }}" class="btn btn-warning btn-sm w-100">
+                                            <i class="bi bi-star-fill me-1"></i> Rate Partner ({{ proposal.receiver.name }})
+                                        </a>
+                                    </div>
+                                {% else %}
+                                    <span class="badge bg-secondary mt-2 w-100">Partner Rated</span>
+                                    {% for rating in proposal.ratings %}
+                                        {% if rating.fromUser.id == app.user.id %}
+                                            <p class="mt-2 mb-1 small text-success">
+                                                Your Score: <span class="fw-bold">{{ rating.score }}/5</span>
+                                            </p>
+                                            {% if rating.comment %}
+                                                <small class="text-muted">Comment: "{{ rating.comment|u.truncate(40) }}"</small>
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+
                             {% elseif proposal.status == 'refused' %}
                                 <span class="badge bg-danger mt-2">Refused</span>
+
                             {% endif %}
 
 
