@@ -1,0 +1,804 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter une compétence - SwapSkill{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary: #6366F1;
+            --primary-light: #818CF8;
+            --primary-dark: #4F46E5;
+            --accent: #10B981;
+            --accent-light: #34D399;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --light-bg: #F8FAFC;
+            --card-bg: #FFFFFF;
+            --text-primary: #334155;
+            --text-secondary: #64748B;
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+        }
+
+        .form-container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Breadcrumb */
+        .breadcrumb-nav {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .breadcrumb-nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .breadcrumb-nav a:hover {
+            color: var(--primary);
+        }
+
+        /* Header */
+        .form-header {
+            background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+            border-radius: var(--radius-lg);
+            padding: 2.5rem;
+            color: white;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transform: translate(100px, -100px);
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .form-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .form-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            line-height: 1.2;
+        }
+
+        .form-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+        }
+
+        /* Form Container */
+        .form-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            padding: 2.5rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid #F1F5F9;
+            margin-bottom: 2rem;
+        }
+
+        /* Form Groups */
+        .form-section {
+            margin-bottom: 2.5rem;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid #F1F5F9;
+        }
+
+        .section-title i {
+            color: var(--primary);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .form-label i {
+            color: var(--primary);
+            font-size: 0.9rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 1px solid #E2E8F0;
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            color: var(--text-primary);
+            background: white;
+            transition: all 0.2s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .form-control::placeholder {
+            color: var(--text-secondary);
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%236366F1' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 16px;
+            padding-right: 2.5rem;
+        }
+
+        /* Help Text */
+        .form-help {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Tags Input */
+        .tags-input-container {
+            border: 1px solid #E2E8F0;
+            border-radius: var(--radius-md);
+            padding: 0.75rem;
+            background: white;
+            min-height: 52px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #EFF6FF;
+            color: var(--primary);
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            border: 1px solid #DBEAFE;
+        }
+
+        .tag-remove {
+            background: none;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+            padding: 0;
+            font-size: 1.1rem;
+            line-height: 1;
+        }
+
+        .tags-input {
+            flex: 1;
+            min-width: 150px;
+            border: none;
+            outline: none;
+            padding: 0.25rem;
+            font-size: 1rem;
+        }
+
+        /* Level Preview */
+        .level-preview {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            background: #F8FAFC;
+            border-radius: var(--radius-md);
+            border: 1px solid #F1F5F9;
+        }
+
+        .level-preview-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .level-indicator {
+            margin-bottom: 1rem;
+        }
+
+        .level-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .level-labels span {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .level-bar {
+            height: 8px;
+            background: #F1F5F9;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .level-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .level-fill.beginner { width: 33%; background: var(--accent); }
+        .level-fill.intermediate { width: 66%; background: var(--warning); }
+        .level-fill.advanced { width: 100%; background: var(--primary); }
+        .level-fill.expert { width: 100%; background: linear-gradient(90deg, var(--primary) 0%, var(--primary-dark) 100%); }
+
+        /* Form Actions */
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #F1F5F9;
+        }
+
+        .btn {
+            padding: 0.875rem 2rem;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--text-primary);
+            border: 1px solid #E2E8F0;
+        }
+
+        .btn-secondary:hover {
+            background: #F8FAFC;
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .form-container {
+                padding: 0 1rem;
+            }
+
+            .form-header {
+                padding: 2rem 1.5rem;
+            }
+
+            .form-title {
+                font-size: 2rem;
+            }
+
+            .form-card {
+                padding: 1.5rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="form-container">
+        <!-- Breadcrumb Navigation -->
+        <nav class="breadcrumb-nav">
+            <a href="{{ path('app_dashboard') }}">Dashboard</a>
+            <i class="bi bi-chevron-right"></i>
+            <a href="{{ path('app_skill_index') }}">Compétences</a>
+            <i class="bi bi-chevron-right"></i>
+            <span>Ajouter une compétence</span>
+        </nav>
+
+        <!-- Header -->
+        <div class="form-header">
+            <div class="header-content">
+                <div class="form-icon">
+                    <i class="bi bi-plus-lg"></i>
+                </div>
+                <h1 class="form-title">Ajouter une nouvelle compétence</h1>
+                <p class="form-subtitle">
+                    Partagez vos talents avec la communauté SwapSkill. Plus votre profil est complet,
+                    plus vous aurez de chances de trouver des échanges intéressants.
+                </p>
+            </div>
+        </div>
+
+        <!-- Form Card -->
+        <div class="form-card">
+            <form method="POST" action="{{ path('app_skill_new') }}" id="skillForm">
+                <!-- Informations de base -->
+                <div class="form-section">
+                    <h2 class="section-title">
+                        <i class="bi bi-card-heading"></i>
+                        Informations principales
+                    </h2>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="bi bi-card-text"></i>
+                                Titre de la compétence *
+                            </label>
+                            <input type="text"
+                                   name="title"
+                                   class="form-control"
+                                   required
+                                   placeholder="Ex: Développement Web, Design Graphique, Marketing Digital..."
+                                   maxlength="100">
+                            <div class="form-help">
+                                <i class="bi bi-info-circle"></i>
+                                Donnez un titre clair et descriptif à votre compétence
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="bi bi-tag"></i>
+                                Catégorie *
+                            </label>
+                            <select name="category" id="categorySelect" class="form-control" required>
+                                <option value="">Sélectionnez une catégorie</option>
+                                <option value="Programming">Programmation</option>
+                                <option value="Design">Design</option>
+                                <option value="Marketing">Marketing</option>
+                                <option value="Management">Management</option>
+                                <option value="Language">Langues</option>
+                                <option value="Creative">Créativité</option>
+                                <option value="Business">Business</option>
+                                <option value="Technical">Technique</option>
+                                <option value="other">Autre...</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="otherCategoryField" style="display:none;">
+                        <label class="form-label">
+                            <i class="bi bi-plus-circle"></i>
+                            Nouvelle catégorie *
+                        </label>
+                        <input type="text"
+                               name="category_other"
+                               class="form-control"
+                               placeholder="Entrez le nom de votre nouvelle catégorie"
+                               maxlength="50">
+                    </div>
+                </div>
+
+                <!-- Description -->
+                <div class="form-section">
+                    <h2 class="section-title">
+                        <i class="bi bi-file-text"></i>
+                        Description détaillée
+                    </h2>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="bi bi-text-paragraph"></i>
+                            Description
+                        </label>
+                        <textarea name="description"
+                                  class="form-control"
+                                  placeholder="Décrivez votre compétence en détail. Que pouvez-vous enseigner ? Quelles sont vos spécialités ?
+Exemples de projets réalisés, technologies maîtrisées, méthodologies utilisées..."
+                                  rows="5"
+                                  maxlength="2000"></textarea>
+                        <div class="form-help">
+                            <i class="bi bi-lightbulb"></i>
+                            Une description complète augmente vos chances d'être contacté
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Niveau et disponibilité -->
+                <div class="form-section">
+                    <h2 class="section-title">
+                        <i class="bi bi-graph-up"></i>
+                        Niveau & Disponibilité
+                    </h2>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="bi bi-bar-chart"></i>
+                                Niveau de maîtrise *
+                            </label>
+                            <select name="level" id="levelSelect" class="form-control" required>
+                                <option value="">Sélectionnez votre niveau</option>
+                                <option value="beginner">Débutant</option>
+                                <option value="intermediate">Intermédiaire</option>
+                                <option value="advanced">Avancé</option>
+                                <option value="expert">Expert</option>
+                            </select>
+
+                            <!-- Level Preview -->
+                            <div class="level-preview" id="levelPreview" style="display: none;">
+                                <div class="level-preview-title">Aperçu de votre niveau :</div>
+                                <div class="level-indicator">
+                                    <div class="level-labels">
+                                        <span id="levelLabel">Débutant</span>
+                                        <span id="levelValue">33%</span>
+                                    </div>
+                                    <div class="level-bar">
+                                        <div class="level-fill beginner" id="levelFill"></div>
+                                    </div>
+                                </div>
+                                <div class="form-help">
+                                    <i class="bi bi-info-circle"></i>
+                                    <span id="levelDescription">Bonne compréhension des bases</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="bi bi-calendar-check"></i>
+                                Disponibilité *
+                            </label>
+                            <select name="availability" class="form-control" required>
+                                <option value="">Sélectionnez votre disponibilité</option>
+                                <option value="available">Disponible pour échange</option>
+                                <option value="limited">Disponibilité limitée</option>
+                                <option value="unavailable">Indisponible pour le moment</option>
+                            </select>
+                            <div class="form-help">
+                                <i class="bi bi-clock"></i>
+                                Vous pourrez modifier cette information plus tard
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tags -->
+                <div class="form-section">
+                    <h2 class="section-title">
+                        <i class="bi bi-tags"></i>
+                        Tags & Mots-clés
+                    </h2>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="bi bi-hash"></i>
+                            Ajouter des tags
+                        </label>
+                        <div class="tags-input-container" id="tagsContainer">
+                            <input type="text"
+                                   class="tags-input"
+                                   id="tagInput"
+                                   placeholder="Appuyez sur Entrée pour ajouter un tag"
+                                   maxlength="30">
+                        </div>
+                        <input type="hidden" name="tags" id="tagsInput">
+                        <div class="form-help">
+                            <i class="bi bi-lightbulb"></i>
+                            Ajoutez des mots-clés pertinents (ex: React, Photoshop, Marketing digital, etc.)
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="form-actions">
+                    <a href="{{ path('app_skill_index') }}" class="btn btn-secondary">
+                        <i class="bi bi-x-lg"></i>
+                        Annuler
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check-lg"></i>
+                        Créer la compétence
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Template pour les tags -->
+    <template id="tagTemplate">
+        <div class="tag">
+            <span class="tag-text"></span>
+            <button type="button" class="tag-remove">&times;</button>
+        </div>
+    </template>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const categorySelect = document.getElementById('categorySelect');
+            const otherCategoryField = document.getElementById('otherCategoryField');
+            const levelSelect = document.getElementById('levelSelect');
+            const levelPreview = document.getElementById('levelPreview');
+            const levelLabel = document.getElementById('levelLabel');
+            const levelValue = document.getElementById('levelValue');
+            const levelFill = document.getElementById('levelFill');
+            const levelDescription = document.getElementById('levelDescription');
+            const tagInput = document.getElementById('tagInput');
+            const tagsContainer = document.getElementById('tagsContainer');
+            const tagsInput = document.getElementById('tagsInput');
+            const tagTemplate = document.getElementById('tagTemplate');
+            const form = document.getElementById('skillForm');
+
+            let tags = [];
+
+            // Gestion de la catégorie "Autre"
+            categorySelect.addEventListener('change', function() {
+                if (this.value === 'other') {
+                    otherCategoryField.style.display = 'block';
+                    const otherInput = otherCategoryField.querySelector('input');
+                    otherInput.required = true;
+                } else {
+                    otherCategoryField.style.display = 'none';
+                    const otherInput = otherCategoryField.querySelector('input');
+                    otherInput.required = false;
+                }
+            });
+
+            // Aperçu du niveau
+            levelSelect.addEventListener('change', function() {
+                if (this.value) {
+                    levelPreview.style.display = 'block';
+
+                    const levels = {
+                        beginner: {
+                            label: 'Débutant',
+                            value: '33%',
+                            description: 'Bonne compréhension des bases',
+                            class: 'beginner'
+                        },
+                        intermediate: {
+                            label: 'Intermédiaire',
+                            value: '66%',
+                            description: 'Capable de travailler en autonomie',
+                            class: 'intermediate'
+                        },
+                        advanced: {
+                            label: 'Avancé',
+                            value: '100%',
+                            description: 'Maîtrise approfondie, peut former d\'autres personnes',
+                            class: 'advanced'
+                        },
+                        expert: {
+                            label: 'Expert',
+                            value: '100%',
+                            description: 'Maîtrise exceptionnelle, référence dans le domaine',
+                            class: 'expert'
+                        }
+                    };
+
+                    const level = levels[this.value];
+                    levelLabel.textContent = level.label;
+                    levelValue.textContent = level.value;
+                    levelDescription.textContent = level.description;
+
+                    // Mettre à jour la barre de progression
+                    levelFill.className = 'level-fill ' + level.class;
+
+                    // Animation de la barre
+                    setTimeout(() => {
+                        levelFill.style.width = level.value;
+                    }, 10);
+                } else {
+                    levelPreview.style.display = 'none';
+                }
+            });
+
+            // Système de tags
+            tagInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ',') {
+                    e.preventDefault();
+                    addTag(this.value.trim());
+                    this.value = '';
+                }
+            });
+
+            tagInput.addEventListener('blur', function() {
+                if (this.value.trim()) {
+                    addTag(this.value.trim());
+                    this.value = '';
+                }
+            });
+
+            function addTag(text) {
+                if (!text || tags.includes(text.toLowerCase())) return;
+
+                // Limiter à 10 tags
+                if (tags.length >= 10) {
+                    alert('Maximum 10 tags autorisés');
+                    return;
+                }
+
+                tags.push(text.toLowerCase());
+                updateTagsInput();
+
+                const tagElement = tagTemplate.content.cloneNode(true);
+                tagElement.querySelector('.tag-text').textContent = text;
+                const removeBtn = tagElement.querySelector('.tag-remove');
+
+                removeBtn.addEventListener('click', function() {
+                    const tagIndex = tags.indexOf(text.toLowerCase());
+                    if (tagIndex > -1) {
+                        tags.splice(tagIndex, 1);
+                        updateTagsInput();
+                        this.closest('.tag').remove();
+                    }
+                });
+
+                tagsContainer.insertBefore(tagElement, tagInput);
+            }
+
+            function updateTagsInput() {
+                tagsInput.value = tags.join(',');
+            }
+
+            // Validation du formulaire
+            form.addEventListener('submit', function(e) {
+                const title = form.querySelector('input[name="title"]');
+                const category = form.querySelector('select[name="category"]');
+                const level = form.querySelector('select[name="level"]');
+                const availability = form.querySelector('select[name="availability"]');
+
+                let isValid = true;
+
+                // Reset des erreurs
+                document.querySelectorAll('.form-control').forEach(input => {
+                    input.style.borderColor = '';
+                });
+
+                if (!title.value.trim()) {
+                    title.style.borderColor = 'var(--danger)';
+                    isValid = false;
+                }
+
+                if (!category.value) {
+                    category.style.borderColor = 'var(--danger)';
+                    isValid = false;
+                }
+
+                if (category.value === 'other') {
+                    const otherInput = form.querySelector('input[name="category_other"]');
+                    if (!otherInput.value.trim()) {
+                        otherInput.style.borderColor = 'var(--danger)';
+                        isValid = false;
+                    }
+                }
+
+                if (!level.value) {
+                    level.style.borderColor = 'var(--danger)';
+                    isValid = false;
+                }
+
+                if (!availability.value) {
+                    availability.style.borderColor = 'var(--danger)';
+                    isValid = false;
+                }
+
+                if (!isValid) {
+                    e.preventDefault();
+                    alert('Veuillez remplir tous les champs obligatoires (*)');
+                }
+            });
+
+            // Auto-resize du textarea
+            const textarea = form.querySelector('textarea[name="description"]');
+            textarea.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
+            });
+
+            // Animation d'entrée
+            const formGroups = document.querySelectorAll('.form-group');
+            formGroups.forEach((group, index) => {
+                group.style.opacity = '0';
+                group.style.transform = 'translateY(20px)';
+
+                setTimeout(() => {
+                    group.style.transition = 'all 0.5s ease';
+                    group.style.opacity = '1';
+                    group.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+{% endblock %}

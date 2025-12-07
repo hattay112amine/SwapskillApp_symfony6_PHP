@@ -1,0 +1,741 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ event.title }} - SwapSkill{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary: #6366F1;
+            --primary-light: #818CF8;
+            --primary-dark: #4F46E5;
+            --accent: #10B981;
+            --accent-light: #34D399;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --light-bg: #F8FAFC;
+            --card-bg: #FFFFFF;
+            --text-primary: #334155;
+            --text-secondary: #64748B;
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+        }
+
+        .event-detail-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Breadcrumb */
+        .breadcrumb-nav {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .breadcrumb-nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .breadcrumb-nav a:hover {
+            color: var(--primary);
+        }
+
+        /* Header Section */
+        .event-header {
+            background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+            border-radius: var(--radius-lg);
+            padding: 3rem 2.5rem;
+            color: white;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .event-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transform: translate(100px, -100px);
+        }
+
+        .event-header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .event-type-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .event-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .event-meta {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .meta-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .meta-content h4 {
+            font-size: 0.85rem;
+            font-weight: 600;
+            opacity: 0.9;
+            margin-bottom: 0.25rem;
+        }
+
+        .meta-content p {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        /* Main Content */
+        .event-main-content {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 2rem;
+        }
+
+        /* Left Column */
+        .event-description-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid #F1F5F9;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-title i {
+            color: var(--primary);
+        }
+
+        .event-description {
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: var(--text-primary);
+        }
+
+        /* Details Grid */
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .detail-card {
+            background: #F8FAFC;
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            border: 1px solid #F1F5F9;
+        }
+
+        .detail-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .detail-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* Right Column - Action Panel */
+        .action-panel {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid #F1F5F9;
+            position: sticky;
+            top: 2rem;
+            height: fit-content;
+        }
+
+        .action-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .action-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin: 0 auto 1rem;
+        }
+
+        .action-organizer h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .action-organizer p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .action-btn {
+            padding: 0.875rem 1.5rem;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .action-btn.primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .action-btn.primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .action-btn.secondary {
+            background: white;
+            color: var(--text-primary);
+            border: 1px solid #E2E8F0;
+        }
+
+        .action-btn.secondary:hover {
+            background: #F8FAFC;
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .action-btn.success {
+            background: var(--accent);
+            color: white;
+        }
+
+        .action-btn.success:hover {
+            background: var(--accent-light);
+        }
+
+        .action-btn.danger {
+            background: #FEF2F2;
+            color: #DC2626;
+            border: 1px solid #FECACA;
+        }
+
+        .action-btn.danger:hover {
+            background: #FEE2E2;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #F1F5F9;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* Registration Section */
+        .registration-section {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid #F1F5F9;
+            margin-top: 2rem;
+        }
+
+        /* Delete Form */
+        .delete-form-container {
+            background: #FEF2F2;
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            margin-top: 2rem;
+            border: 1px solid #FECACA;
+        }
+
+        .delete-warning {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .warning-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #DC2626;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .warning-content h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #DC2626;
+            margin-bottom: 0.5rem;
+        }
+
+        .warning-content p {
+            color: #7F1D1D;
+            font-size: 0.95rem;
+        }
+
+        .delete-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .event-main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .action-panel {
+                position: static;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .event-header {
+                padding: 2rem 1.5rem;
+            }
+
+            .event-title {
+                font-size: 2rem;
+            }
+
+            .event-meta {
+                gap: 1rem;
+            }
+
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .delete-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="event-detail-container">
+        <!-- Breadcrumb Navigation -->
+        <nav class="breadcrumb-nav">
+            <a href="{{ path('app_dashboard') }}">Dashboard</a>
+            <i class="bi bi-chevron-right"></i>
+            <a href="{{ path('app_event_index') }}">Événements</a>
+            <i class="bi bi-chevron-right"></i>
+            <span>{{ event.title|u.truncate(30, '...') }}</span>
+        </nav>
+
+        <!-- Header Section -->
+        <div class="event-header">
+            <div class="event-header-content">
+                <div class="event-type-badge">
+                    <i class="bi bi-tag"></i>
+                    {{ event.type|default('Événement') }}
+                </div>
+                <h1 class="event-title">{{ event.title }}</h1>
+
+                <div class="event-meta">
+                    <div class="meta-item">
+                        <div class="meta-icon">
+                            <i class="bi bi-person"></i>
+                        </div>
+                        <div class="meta-content">
+                            <h4>Organisateur</h4>
+                            <p>{{ event.organizer ? event.organizer.name : 'Non spécifié' }}</p>
+                        </div>
+                    </div>
+
+                    <div class="meta-item">
+                        <div class="meta-icon">
+                            <i class="bi bi-calendar"></i>
+                        </div>
+                        <div class="meta-content">
+                            <h4>Date</h4>
+                            <p>{{ event.date ? event.date|date('d/m/Y H:i') : 'Non spécifié' }}</p>
+                        </div>
+                    </div>
+
+                    <div class="meta-item">
+                        <div class="meta-icon">
+                            <i class="bi bi-eye"></i>
+                        </div>
+                        <div class="meta-content">
+                            <h4>Vues</h4>
+                            <p>{{ event.views|default('0') }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="event-main-content">
+            <!-- Left Column -->
+            <div class="left-column">
+                <!-- Description -->
+                <div class="event-description-card">
+                    <h2 class="section-title">
+                        <i class="bi bi-file-text"></i>
+                        Description
+                    </h2>
+                    <div class="event-description">
+                        {{ event.description|default('Aucune description fournie.')|nl2br }}
+                    </div>
+                </div>
+
+                <!-- Details -->
+                <div class="event-description-card">
+                    <h2 class="section-title">
+                        <i class="bi bi-info-circle"></i>
+                        Détails
+                    </h2>
+
+                    <div class="details-grid">
+                        <div class="detail-card">
+                            <div class="detail-label">ID</div>
+                            <div class="detail-value">#{{ event.id }}</div>
+                        </div>
+
+                        <div class="detail-card">
+                            <div class="detail-label">Type</div>
+                            <div class="detail-value">{{ event.type|default('Non spécifié') }}</div>
+                        </div>
+
+                        <div class="detail-card">
+                            <div class="detail-label">Lieu</div>
+                            <div class="detail-value">{{ event.location|default('Non spécifié') }}</div>
+                        </div>
+
+                        <div class="detail-card">
+                            <div class="detail-label">Capacité</div>
+                            <div class="detail-value">{{ event.capacity }} places</div>
+                        </div>
+
+                        <div class="detail-card">
+                            <div class="detail-label">Prix</div>
+                            <div class="detail-value">
+                                {% if event.price == 0 %}
+                                    <span style="color: var(--accent); font-weight: 700;">Gratuit</span>
+                                {% else %}
+                                    {{ event.price }} TND
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="detail-card">
+                            <div class="detail-label">Créé le</div>
+                            <div class="detail-value">{{ event.createdAt ? event.createdAt|date('d/m/Y H:i') : 'Date inconnue' }}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Registration Section -->
+                <div class="registration-section">
+                    <h2 class="section-title">
+                        <i class="bi bi-people"></i>
+                        Inscription
+                    </h2>
+
+                    {% if event.date > date('now') %}
+                        <form action="{{ path('app_event_register', {'id': event.id}) }}" method="post" class="registration-form">
+                            <input type="hidden" name="_token" value="{{ csrf_token('register' ~ event.id) }}">
+                            <div class="form-group">
+                                <p>Il reste <strong>{{ event.capacity - (event.registrations|length|default(0)) }}</strong> places sur {{ event.capacity }}</p>
+                            </div>
+                            <button type="submit" class="action-btn success w-100">
+                                <i class="bi bi-check-lg"></i>
+                                S'inscrire à cet événement
+                            </button>
+                        </form>
+                    {% else %}
+                        <div class="alert alert-warning" role="alert">
+                            <i class="bi bi-clock-history"></i>
+                            Cet événement est terminé. Les inscriptions sont closes.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Right Column - Action Panel -->
+            <div class="action-panel">
+                <div class="action-header">
+                    <div class="action-avatar">
+                        {{ event.organizer ? event.organizer.name|first|upper : '?' }}
+                    </div>
+                    <div class="action-organizer">
+                        <h4>{{ event.organizer ? event.organizer.name : 'Organisateur' }}</h4>
+                        <p>Organisateur de l'événement</p>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <a href="{{ path('app_event_index') }}" class="action-btn secondary">
+                        <i class="bi bi-arrow-left"></i>
+                        Retour à la liste
+                    </a>
+
+                    {% if app.user and event.organizer and app.user.id == event.organizer.id %}
+                        <!-- Owner actions -->
+                        <a href="{{ path('app_event_edit', {'id': event.id}) }}" class="action-btn secondary">
+                            <i class="bi bi-pencil"></i>
+                            Modifier l'événement
+                        </a>
+                    {% else %}
+                        <!-- Visitor actions -->
+                        <a href="#" class="action-btn primary" onclick="shareEvent()">
+                            <i class="bi bi-share"></i>
+                            Partager l'événement
+                        </a>
+                    {% endif %}
+
+                    {% if event.date > date('now') %}
+                        <button type="button" class="action-btn success" onclick="addToCalendar()">
+                            <i class="bi bi-calendar-plus"></i>
+                            Ajouter à mon calendrier
+                        </button>
+                    {% endif %}
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number">{{ event.registrations|length|default(0) }}</div>
+                        <div class="stat-label">Inscrits</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">{{ event.views|default(0) }}</div>
+                        <div class="stat-label">Vues</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">{{ event.capacity }}</div>
+                        <div class="stat-label">Capacité</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">
+                            {% if event.price == 0 %}
+                                Gratuit
+                            {% else %}
+                                {{ event.price }} TND
+                            {% endif %}
+                        </div>
+                        <div class="stat-label">Prix</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Delete Form Section (for owner only) -->
+        {% if app.user and event.organizer and app.user.id == event.organizer.id %}
+            <div class="delete-form-container">
+                <div class="delete-warning">
+                    <div class="warning-icon">
+                        <i class="bi bi-exclamation-triangle"></i>
+                    </div>
+                    <div class="warning-content">
+                        <h3>Zone de danger</h3>
+                        <p>La suppression de cet événement est irréversible. Toutes les inscriptions associées seront perdues.</p>
+                    </div>
+                </div>
+
+                <div class="delete-actions">
+                    <!-- Formulaire de suppression -->
+                    {{ include('event/_delete_form.html.twig') }}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Confirmation avant suppression
+            const deleteForm = document.querySelector('form[name="delete_form"]');
+            if (deleteForm) {
+                deleteForm.addEventListener('submit', function(e) {
+                    if (!confirm('Êtes-vous sûr de vouloir supprimer cet événement ? Cette action est irréversible.')) {
+                        e.preventDefault();
+                    }
+                });
+            }
+
+            // Animation des statistiques
+            const statNumbers = document.querySelectorAll('.stat-number');
+            statNumbers.forEach(stat => {
+                const text = stat.textContent;
+                if (!isNaN(parseInt(text))) {
+                    const target = parseInt(text);
+                    let current = 0;
+                    const increment = target / 50;
+                    const timer = setInterval(() => {
+                        current += increment;
+                        if (current >= target) {
+                            stat.textContent = target;
+                            clearInterval(timer);
+                        } else {
+                            stat.textContent = Math.floor(current);
+                        }
+                    }, 30);
+                }
+            });
+
+            // Partage d'événement
+            window.shareEvent = function() {
+                if (navigator.share) {
+                    navigator.share({
+                        title: '{{ event.title }}',
+                        text: 'Découvrez cet événement sur SwapSkill !',
+                        url: window.location.href,
+                    })
+                        .then(() => console.log('Partage réussi'))
+                        .catch(error => console.log('Erreur de partage:', error));
+                } else {
+                    // Fallback pour les navigateurs qui ne supportent pas l'API Share
+                    navigator.clipboard.writeText(window.location.href);
+                    alert('Lien copié dans le presse-papier !');
+                }
+            };
+
+            // Ajouter au calendrier
+            window.addToCalendar = function() {
+                const eventDate = new Date('{{ event.date|date("Y-m-d H:i:s") }}');
+                const endDate = new Date(eventDate.getTime() + (2 * 60 * 60 * 1000)); // +2 heures
+
+                const icsContent = [
+                    'BEGIN:VCALENDAR',
+                    'VERSION:2.0',
+                    'BEGIN:VEVENT',
+                    'SUMMARY:' + encodeURIComponent('{{ event.title }}'),
+                    'DESCRIPTION:' + encodeURIComponent('{{ event.description|slice(0, 100) }}...'),
+                    'DTSTART:' + eventDate.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, ''),
+                    'DTEND:' + endDate.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, ''),
+                    'LOCATION:' + encodeURIComponent('{{ event.location }}'),
+                    'END:VEVENT',
+                    'END:VCALENDAR'
+                ].join('\n');
+
+                const blob = new Blob([icsContent], { type: 'text/calendar' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'event-{{ event.id }}.ics';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+            };
+        });
+    </script>
+{% endblock %}

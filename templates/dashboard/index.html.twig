@@ -1,0 +1,932 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tableau de bord - SwapSkill{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary: #6366F1;
+            --primary-dark: #4F46E5;
+            --secondary: #8B5CF6;
+            --accent: #10B981;
+            --light-bg: #F8FAFC;
+            --dark-bg: #1E293B;
+            --card-bg: #FFFFFF;
+            --text-primary: #334155;
+            --text-secondary: #64748B;
+            --gradient-primary: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+            --gradient-accent: linear-gradient(135deg, #10B981 0%, #34D399 100%);
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--text-primary);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Layout principal */
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            min-height: 100vh;
+        }
+
+        /* Sidebar moderne */
+        .sidebar {
+            background: var(--dark-bg);
+            padding: 2rem 1.5rem;
+            color: white;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: var(--shadow-lg);
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #FFFFFF 0%, #E2E8F0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2.5rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius-md);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        .user-info h3 {
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+            color: white;
+        }
+
+        .user-info p {
+            font-size: 0.875rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .nav-section {
+            margin-bottom: 2rem;
+        }
+
+        .nav-title {
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 1rem;
+            padding-left: 0.5rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.875rem 1rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            border-radius: var(--radius-md);
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .nav-link.active {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        .nav-link.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 60%;
+            background: white;
+            border-radius: 0 2px 2px 0;
+        }
+
+        .nav-icon {
+            font-size: 1.2rem;
+        }
+
+        /* Contenu principal */
+        .main-content {
+            padding: 2rem;
+            background: var(--light-bg);
+            position: relative;
+        }
+
+        /* Header principal */
+        .main-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #E2E8F0;
+        }
+
+        .header-title h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .header-title p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .search-box {
+            position: relative;
+            width: 300px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            border: 1px solid #E2E8F0;
+            border-radius: var(--radius-md);
+            background: white;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+        }
+
+        /* Cartes modernes */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card-modern {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            padding: 1.75rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid #F1F5F9;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-modern:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .card-icon.primary {
+            background: var(--gradient-primary);
+        }
+
+        .card-icon.accent {
+            background: var(--gradient-accent);
+        }
+
+        .card-icon.secondary {
+            background: linear-gradient(135deg, #F59E0B 0%, #FBBF24 100%);
+        }
+
+        /* Listes améliorées */
+        .modern-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .modern-list-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            background: #F8FAFC;
+            border-radius: var(--radius-sm);
+            margin-bottom: 0.75rem;
+            border-left: 4px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .modern-list-item:hover {
+            background: white;
+            border-left-color: var(--primary);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .list-icon {
+            margin-right: 1rem;
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+
+        .list-content {
+            flex: 1;
+        }
+
+        .list-title {
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .list-meta {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: #EFF6FF;
+            color: var(--primary);
+        }
+
+        .badge.accent {
+            background: #D1FAE5;
+            color: var(--accent);
+        }
+
+        /* Notifications */
+        .notification-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 1rem;
+            background: white;
+            border-radius: var(--radius-sm);
+            margin-bottom: 0.75rem;
+            border-left: 4px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .notification-item.unread {
+            background: #F0F9FF;
+            border-left-color: var(--primary);
+        }
+
+        .notification-item:hover {
+            transform: translateX(5px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .notification-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--primary);
+            margin-top: 0.5rem;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-time {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+        }
+
+        /* Statistiques */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid #F1F5F9;
+        }
+
+        .stat-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .stat-info h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-info p {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        /* Bouton d'action flottant */
+        .floating-action {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 56px;
+            height: 56px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: var(--shadow-lg);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .floating-action:hover {
+            transform: scale(1.1);
+            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.3);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .dashboard-container {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                display: none;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .header-actions {
+                width: 100%;
+            }
+
+            .search-box {
+                width: 100%;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="dashboard-container">
+        <!-- Sidebar moderne -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">S</div>
+                <div class="logo-text">SwapSkill</div>
+            </div>
+
+            <div class="user-profile">
+                <div class="avatar">
+                    {{ app.user.name|first|upper }}
+                </div>
+                <div class="user-info">
+                    <h3>{{ app.user.name|capitalize }}</h3>
+                    <p>Membre Premium</p>
+                </div>
+            </div>
+
+            <nav>
+                <div class="nav-section">
+                    <h4 class="nav-title">Navigation principale</h4>
+                    <a href="{{ path('app_event_index') }}" class="nav-link ">
+                        <i class="bi bi-calendar-event nav-icon"></i>
+                        <span>Consulter événements</span>
+                    </a>
+                    <a href="#organizedEvents" class="nav-link ">
+                        <i class="bi bi-calendar-event nav-icon"></i>
+                        <span>Événements organisés</span>
+                    </a>
+                    <a href="#registeredEvents" class="nav-link ">
+                        <i class="bi bi-calendar-check nav-icon"></i>
+                        <span>Événements inscrits</span>
+                    </a>
+                    <a href="{{ path('browse_skills') }}" class="nav-link ">
+                        <i class="bi bi-tools nav-icon"></i>
+                        <span>Explorer d'autres compétences</span>
+                    </a>
+                    <a href="{{ path('app_skill_index') }}" class="nav-link ">
+                        <i class="bi bi-tools nav-icon"></i>
+                        <span>Mes compétences</span>
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <h4 class="nav-title">Échanges</h4>
+                    <a href="#offeredSkills" class="nav-link nav-scroll">
+                        <i class="bi bi-arrow-up-circle nav-icon"></i>
+                        <span>Compétences proposées</span>
+                    </a>
+                    <a href="#requestedSkills" class="nav-link nav-scroll">
+                        <i class="bi bi-arrow-down-circle nav-icon"></i>
+                        <span>Compétences demandées</span>
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <h4 class="nav-title">Communication</h4>
+
+                    <!-- Lien interne : notifications -->
+                    <a href="#notifications" class="nav-link nav-scroll">
+                        <i class="bi bi-bell nav-icon"></i>
+                        <a href="{{ path('notification_index') }}" class="nav-link ">
+                            <span>Notifications</span>
+                        </a>
+                        {% if notifications|length > 0 %}
+                            <span class="badge accent ms-auto">{{ notifications|length }}</span>
+                        {% endif %}
+                    </a>
+
+                    <!-- Lien externe : profil -->
+                    <a href="{{ path('app_profile') }}" class="nav-link">
+                        <i class="bi bi-person-circle nav-icon"></i>
+                        <span>Mon profil</span>
+                    </a>
+                </div>
+
+            </nav>
+        </aside>
+
+        <!-- Contenu principal -->
+        <main class="main-content">
+            <!-- En-tête -->
+            <header class="main-header">
+                <div class="header-title">
+                    <h1>Bonjour, {{ app.user.name|capitalize }} 👋</h1>
+                    <p>Voici un aperçu de votre activité SwapSkill</p>
+                </div>
+                <div class="header-actions">
+                    <div class="search-box">
+                        <i class="bi bi-search search-icon"></i>
+                        <input type="text" placeholder="Rechercher...">
+                    </div>
+                </div>
+            </header>
+
+            <!-- Statistiques -->
+            <div class="stats-grid">
+
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: var(--gradient-primary);">
+                        <i class="bi bi-calendar-event"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>{{ organizedEvents|length }}</h3>
+                        <p>Événements organisés</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: var(--gradient-accent);">
+                        <i class="bi bi-calendar-check"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>{{ registeredEvents|length }}</h3>
+                        <p>Événements inscrits</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #F59E0B 0%, #FBBF24 100%);">
+                        <i class="bi bi-tools"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>{{ mySkills|length }}</h3>
+                        <p>Compétences</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #EC4899 0%, #F472B6 100%);">
+                        <i class="bi bi-chat-dots"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>{{ notifications|length }}</h3>
+                        <p>Notifications</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grille des cartes -->
+            <div class="dashboard-grid">
+                <!-- Événements organisés -->
+                <section id="organizedEvents" class="card-modern">
+                    <div class="card-header">
+                        <h2 class="card-title">Événements organisés</h2>
+                        <div class="card-icon primary">
+                            <i class="bi bi-calendar-event"></i>
+                        </div>
+                    </div>
+                    {% if organizedEvents|length > 0 %}
+                        <ul class="modern-list">
+                            {% for event in organizedEvents|slice(0, 5) %}
+                                <li class="modern-list-item">
+                                    <div class="list-icon">
+                                        <i class="bi bi-calendar-event"></i>
+                                    </div>
+                                    <div class="list-content">
+                                        <div class="list-title">{{ event.title }}</div>
+                                        <div class="list-meta">
+                                            <span><i class="bi bi-clock"></i> {{ event.date|date('d/m/Y H:i') }}</span>
+                                            <span class="badge">Organisé</span>
+                                        </div>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        {% if organizedEvents|length > 5 %}
+                            <div class="text-center mt-3">
+                                <small class="text-muted">+ {{ organizedEvents|length - 5 }} autres événements</small>
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="bi bi-calendar-event text-muted" style="font-size: 3rem;"></i>
+                            <p class="text-muted mt-3">Vous n'avez pas organisé d'événements</p>
+                            <button class="btn btn-primary mt-2">Créer un événement</button>
+                        </div>
+                    {% endif %}
+                </section>
+
+                <!-- Événements inscrits -->
+                <section id="registeredEvents" class="card-modern">
+                    <div class="card-header">
+                        <h2 class="card-title">Événements inscrits</h2>
+                        <div class="card-icon accent">
+                            <i class="bi bi-calendar-check"></i>
+                        </div>
+                    </div>
+                    {% if registeredEvents|length > 0 %}
+                        <ul class="modern-list">
+                            {% for event in registeredEvents|slice(0, 5) %}
+                                <li class="modern-list-item">
+                                    <div class="list-icon">
+                                        <i class="bi bi-calendar-check"></i>
+                                    </div>
+                                    <div class="list-content">
+                                        <div class="list-title">{{ event.title }}</div>
+                                        <div class="list-meta">
+                                            <span><i class="bi bi-clock"></i> {{ event.date|date('d/m/Y H:i') }}</span>
+                                            <span class="badge accent">Inscrit</span>
+                                        </div>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        {% if registeredEvents|length > 5 %}
+                            <div class="text-center mt-3">
+                                <small class="text-muted">+ {{ registeredEvents|length - 5 }} autres événements</small>
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="bi bi-calendar-check text-muted" style="font-size: 3rem;"></i>
+                            <p class="text-muted mt-3">Vous n'êtes inscrit à aucun événement</p>
+                            <button class="btn btn-outline-primary mt-2">Explorer les événements</button>
+                        </div>
+                    {% endif %}
+                </section>
+
+                <!-- Mes compétences -->
+                <section id="skills" class="card-modern">
+                    <div class="card-header">
+                        <h2 class="card-title">Mes compétences</h2>
+                        <div class="card-icon secondary">
+                            <i class="bi bi-tools"></i>
+                        </div>
+                    </div>
+                    {% if mySkills|length > 0 %}
+                        <ul class="modern-list">
+                            {% for skill in mySkills|slice(0, 5) %}
+                                <li class="modern-list-item">
+                                    <div class="list-icon">
+                                        <i class="bi bi-tools"></i>
+                                    </div>
+                                    <div class="list-content">
+                                        <div class="list-title">{{ skill.title }}</div>
+                                        <div class="list-meta">
+                                            <span>Niveau: {{ skill.level|capitalize }}</span>
+                                            <span>•</span>
+                                            <span>Dispo: {{ skill.availability|capitalize }}</span>
+                                        </div>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        {% if mySkills|length > 5 %}
+                            <div class="text-center mt-3">
+                                <small class="text-muted">+ {{ mySkills|length - 5 }} autres compétences</small>
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="bi bi-tools text-muted" style="font-size: 3rem;"></i>
+                            <p class="text-muted mt-3">Vous n'avez pas ajouté de compétences</p>
+                            <button class="btn btn-primary mt-2">Ajouter une compétence</button>
+                        </div>
+                    {% endif %}
+                </section>
+
+                <!-- Compétences proposées -->
+                <section id="offeredSkills" class="card-modern">
+                    <div class="card-header">
+                        <h2 class="card-title">Compétences proposées</h2>
+                        <div class="card-icon" style="background: linear-gradient(135deg, #3B82F6 0%, #60A5FA 100%);">
+                            <i class="bi bi-arrow-up-circle"></i>
+                        </div>
+                    </div>
+                    {% if offeredSkills|length > 0 %}
+                        <ul class="modern-list">
+                            {% for skill in offeredSkills|slice(0, 5) %}
+                                <li class="modern-list-item">
+                                    <div class="list-icon">
+                                        <i class="bi bi-arrow-up-circle"></i>
+                                    </div>
+                                    <div class="list-content">
+                                        <div class="list-title">{{ skill.title }}</div>
+                                        <div class="list-meta">
+                                            <span>Niveau: {{ skill.level|capitalize }}</span>
+                                            <span class="badge" style="background: #DBEAFE;">Offerte</span>
+                                        </div>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="bi bi-arrow-up-circle text-muted" style="font-size: 3rem;"></i>
+                            <p class="text-muted mt-3">Aucune compétence proposée</p>
+                        </div>
+                    {% endif %}
+                </section>
+
+                <!-- Compétences demandées -->
+                <section id="requestedSkills" class="card-modern">
+                    <div class="card-header">
+                        <h2 class="card-title">Compétences demandées</h2>
+                        <div class="card-icon" style="background: linear-gradient(135deg, #EC4899 0%, #F472B6 100%);">
+                            <i class="bi bi-arrow-down-circle"></i>
+                        </div>
+                    </div>
+                    {% if requestedSkills|length > 0 %}
+                        <ul class="modern-list">
+                            {% for skill in requestedSkills|slice(0, 5) %}
+                                <li class="modern-list-item">
+                                    <div class="list-icon">
+                                        <i class="bi bi-arrow-down-circle"></i>
+                                    </div>
+                                    <div class="list-content">
+                                        <div class="list-title">{{ skill.title }}</div>
+                                        <div class="list-meta">
+                                            <span>Niveau: {{ skill.level|capitalize }}</span>
+                                            <span class="badge" style="background: #FCE7F3; color: #EC4899;">Demandée</span>
+                                        </div>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="bi bi-arrow-down-circle text-muted" style="font-size: 3rem;"></i>
+                            <p class="text-muted mt-3">Aucune compétence demandée</p>
+                        </div>
+                    {% endif %}
+                </section>
+
+                <!-- Notifications -->
+                <section id="notifications" class="card-modern" style="grid-column: span 2;">
+                    <div class="card-header">
+                        <h2 class="card-title">Notifications récentes</h2>
+                        <div class="card-icon" style="background: linear-gradient(135deg, #8B5CF6 0%, #A78BFA 100%);">
+                            <i class="bi bi-bell"></i>
+                        </div>
+                    </div>
+                    {% if notifications|length > 0 %}
+                        <div class="notifications-container">
+                            {% for notification in notifications|slice(0, 6) %}
+                                <div class="notification-item {% if not notification.isRead %}unread{% endif %}">
+                                    <div class="notification-dot {% if notification.isRead %}d-none{% endif %}"></div>
+                                    <div class="notification-content">
+                                        <strong>{{ notification.type|capitalize }}</strong> - {{ notification.content }}
+                                        <div class="notification-time">
+                                            <i class="bi bi-clock"></i> {{ notification.createdAt ? notification.createdAt|date('d/m/Y H:i') : '' }}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        {% if notifications|length > 6 %}
+                            <div class="text-center mt-3">
+                                <small class="text-muted">+ {{ notifications|length - 6 }} autres notifications</small>
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="bi bi-bell text-muted" style="font-size: 3rem;"></i>
+                            <p class="text-muted mt-3">Aucune notification</p>
+                        </div>
+                    {% endif %}
+                </section>
+            </div>
+
+            <!-- Bouton d'action flottant -->
+            <div class="floating-action">
+                <i class="bi bi-plus-lg"></i>
+            </div>
+        </main>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Navigation smooth scroll
+            document.querySelectorAll('.nav-scroll').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href').substring(1);
+                    const targetElement = document.getElementById(targetId);
+
+                    if (targetElement) {
+                        // Mettre à jour l'état actif
+                        document.querySelectorAll('.nav-scroll').forEach(nav => nav.classList.remove('active'));
+                        this.classList.add('active');
+
+                        // Défilement doux
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+
+            // Marquer les notifications comme lues
+            document.querySelectorAll('.notification-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    this.classList.remove('unread');
+                    const dot = this.querySelector('.notification-dot');
+                    if (dot) dot.classList.add('d-none');
+                });
+            });
+
+            // Bouton d'action flottant
+            document.querySelector('.floating-action').addEventListener('click', function() {
+                alert('Créer un nouvel élément');
+            });
+
+            // Recherche en temps réel
+            const searchInput = document.querySelector('.search-box input');
+            if (searchInput) {
+                searchInput.addEventListener('input', function() {
+                    const searchTerm = this.value.toLowerCase();
+                    document.querySelectorAll('.card-modern').forEach(card => {
+                        const cardContent = card.textContent.toLowerCase();
+                        card.style.display = cardContent.includes(searchTerm) ? 'block' : 'none';
+                    });
+                });
+            }
+        });
+    </script>
+{% endblock %}

@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -52,6 +54,59 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $googleId = null;
+
+    /**
+     * @var Collection<int, Notification>
+     */
+    #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'user')]
+    private Collection $notifications;
+
+    /**
+     * @var Collection<int, Event>
+     */
+    #[ORM\OneToMany(targetEntity: Event::class, mappedBy: 'organizer')]
+    private Collection $organizedEvents;
+
+    /**
+     * @var Collection<int, Message>
+     */
+    #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'user')]
+    private Collection $sentMessages;
+
+    /**
+     * @var Collection<int, Message>
+     */
+    #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'reciever')]
+    private Collection $recievedMessages;
+
+    /**
+     * @var Collection<int, EventRegistration>
+     */
+    #[ORM\OneToMany(targetEntity: EventRegistration::class, mappedBy: 'user')]
+    private Collection $eventRegistrations;
+
+    /**
+     * @var Collection<int, Event>
+     */
+    #[ORM\OneToMany(targetEntity: Event::class, mappedBy: 'organizer')]
+    private Collection $events;
+
+    /**
+     * @var Collection<int, Skill>
+     */
+    #[ORM\OneToMany(targetEntity: Skill::class, mappedBy: 'owner')]
+    private Collection $skills;
+
+    public function __construct()
+    {
+        $this->notifications = new ArrayCollection();
+        $this->organizedEvents = new ArrayCollection();
+        $this->sentMessages = new ArrayCollection();
+        $this->recievedMessages = new ArrayCollection();
+        $this->eventRegistrations = new ArrayCollection();
+        $this->events = new ArrayCollection();
+        $this->skills = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -218,18 +273,217 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // Clear temporary sensitive data if any
     }
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $photo = null;
 
-    public function getPhoto(): ?string
+    /**
+     * @return Collection<int, Notification>
+     */
+    public function getNotifications(): Collection
     {
-        return $this->photo;
+        return $this->notifications;
     }
 
-    public function setPhoto(?string $photo): self
+    public function addNotification(Notification $notification): static
     {
-        $this->photo = $photo;
+        if (!$this->notifications->contains($notification)) {
+            $this->notifications->add($notification);
+            $notification->setUser($this);
+        }
+
         return $this;
     }
+
+    public function removeNotification(Notification $notification): static
+    {
+        if ($this->notifications->removeElement($notification)) {
+            // set the owning side to null (unless already changed)
+            if ($notification->getUser() === $this) {
+                $notification->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Event>
+     */
+    public function getOrganizedEvents(): Collection
+    {
+        return $this->organizedEvents;
+    }
+
+    public function addOrganizedEvent(Event $organizedEvent): static
+    {
+        if (!$this->organizedEvents->contains($organizedEvent)) {
+            $this->organizedEvents->add($organizedEvent);
+            $organizedEvent->setOrganizedEvents($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrganizedEvent(Event $organizedEvent): static
+    {
+        if ($this->organizedEvents->removeElement($organizedEvent)) {
+            // set the owning side to null (unless already changed)
+            if ($organizedEvent->getOrganizedEvents() === $this) {
+                $organizedEvent->setOrganizedEvents(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Message>
+     */
+    public function getSentMessages(): Collection
+    {
+        return $this->sentMessages;
+    }
+
+    public function addSentMessage(Message $sentMessage): static
+    {
+        if (!$this->sentMessages->contains($sentMessage)) {
+            $this->sentMessages->add($sentMessage);
+            $sentMessage->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSentMessage(Message $sentMessage): static
+    {
+        if ($this->sentMessages->removeElement($sentMessage)) {
+            // set the owning side to null (unless already changed)
+            if ($sentMessage->getUser() === $this) {
+                $sentMessage->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Message>
+     */
+    public function getRecievedMessages(): Collection
+    {
+        return $this->recievedMessages;
+    }
+
+    public function addRecievedMessage(Message $recievedMessage): static
+    {
+        if (!$this->recievedMessages->contains($recievedMessage)) {
+            $this->recievedMessages->add($recievedMessage);
+            $recievedMessage->setReciever($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRecievedMessage(Message $recievedMessage): static
+    {
+        if ($this->recievedMessages->removeElement($recievedMessage)) {
+            // set the owning side to null (unless already changed)
+            if ($recievedMessage->getReciever() === $this) {
+                $recievedMessage->setReciever(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, EventRegistration>
+     */
+    public function getEventRegistrations(): Collection
+    {
+        return $this->eventRegistrations;
+    }
+
+    public function addEventRegistration(EventRegistration $eventRegistration): static
+    {
+        if (!$this->eventRegistrations->contains($eventRegistration)) {
+            $this->eventRegistrations->add($eventRegistration);
+            $eventRegistration->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEventRegistration(EventRegistration $eventRegistration): static
+    {
+        if ($this->eventRegistrations->removeElement($eventRegistration)) {
+            // set the owning side to null (unless already changed)
+            if ($eventRegistration->getUser() === $this) {
+                $eventRegistration->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Event>
+     */
+    public function getEvents(): Collection
+    {
+        return $this->events;
+    }
+
+    public function addEvent(Event $event): static
+    {
+        if (!$this->events->contains($event)) {
+            $this->events->add($event);
+            $event->setOrganizer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEvent(Event $event): static
+    {
+        if ($this->events->removeElement($event)) {
+            // set the owning side to null (unless already changed)
+            if ($event->getOrganizer() === $this) {
+                $event->setOrganizer(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Skill>
+     */
+    public function getSkills(): Collection
+    {
+        return $this->skills;
+    }
+
+    public function addSkill(Skill $skill): static
+    {
+        if (!$this->skills->contains($skill)) {
+            $this->skills->add($skill);
+            $skill->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSkill(Skill $skill): static
+    {
+        if ($this->skills->removeElement($skill)) {
+            // set the owning side to null (unless already changed)
+            if ($skill->getOwner() === $this) {
+                $skill->setOwner(null);
+            }
+        }
+
+        return $this;
+    }
+
+
 
 }

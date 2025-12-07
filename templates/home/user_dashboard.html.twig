@@ -1,7 +1,1057 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}SkillSwap{% endblock %}
+{% block title %}SwapSkill - Échangez vos compétences gratuitement{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary: #6366F1;
+            --primary-light: #818CF8;
+            --primary-dark: #4F46E5;
+            --secondary: #8B5CF6;
+            --accent: #10B981;
+            --accent-light: #34D399;
+            --warning: #F59E0B;
+            --light-bg: #F8FAFC;
+            --dark-bg: #1E293B;
+            --text-primary: #334155;
+            --text-secondary: #64748B;
+            --gradient-primary: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+            --gradient-accent: linear-gradient(135deg, #10B981 0%, #34D399 100%);
+            --gradient-dark: linear-gradient(135deg, #1E293B 0%, #334155 100%);
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+            padding: 1rem 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            background: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-primary);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .nav-link {
+            color: var(--text-primary) !important;
+            font-weight: 500;
+            margin: 0 0.5rem;
+            padding: 0.5rem 1rem !important;
+            border-radius: var(--radius-md);
+            transition: all 0.2s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--primary) !important;
+            background: #F8FAFC;
+        }
+
+        .btn-primary-custom {
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+            color: white;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            padding: 10rem 0 6rem;
+            background: linear-gradient(135deg, #F0F9FF 0%, #F8FAFC 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 50%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800"><rect fill="%236366F1" width="800" height="800"/><g fill-opacity="0.1"><circle fill="%238B5CF6" cx="400" cy="400" r="600"/><circle fill="%2310B981" cx="400" cy="400" r="500"/><circle fill="%23F59E0B" cx="400" cy="400" r="300"/></g></svg>');
+            opacity: 0.1;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            max-width: 600px;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Features Section */
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 4rem;
+            font-size: 1.1rem;
+        }
+
+        .features-section {
+            padding: 6rem 0;
+            background: white;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid #F1F5F9;
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary);
+        }
+
+        .feature-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: white;
+        }
+
+        .feature-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .feature-description {
+            color: var(--text-secondary);
+        }
+
+        /* How It Works */
+        .how-it-works {
+            padding: 6rem 0;
+            background: var(--light-bg);
+        }
+
+        .step-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            position: relative;
+            text-align: center;
+            box-shadow: var(--shadow-md);
+            height: 100%;
+        }
+
+        .step-number {
+            width: 48px;
+            height: 48px;
+            background: var(--gradient-primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.25rem;
+            margin: 0 auto 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        /* Events Section */
+        .events-section {
+            padding: 6rem 0;
+            background: white;
+        }
+
+        .event-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            border: 1px solid #F1F5F9;
+            transition: all 0.3s ease;
+        }
+
+        .event-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .event-image {
+            height: 200px;
+            background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+        }
+
+        .event-content {
+            padding: 1.5rem;
+        }
+
+        .event-category {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: #EFF6FF;
+            color: var(--primary);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .event-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .event-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Testimonials */
+        .testimonials-section {
+            padding: 6rem 0;
+            background: var(--light-bg);
+        }
+
+        .testimonial-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid #F1F5F9;
+            position: relative;
+        }
+
+        .testimonial-text {
+            font-style: italic;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-left: 1rem;
+        }
+
+        .testimonial-text::before {
+            content: '"';
+            font-size: 4rem;
+            color: var(--primary);
+            opacity: 0.2;
+            position: absolute;
+            left: -0.5rem;
+            top: -1rem;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .author-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .author-info h4 {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: var(--text-primary);
+        }
+
+        .author-info p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 6rem 0;
+            background: var(--gradient-dark);
+            color: white;
+            text-align: center;
+            border-radius: var(--radius-lg);
+            margin: 4rem auto;
+            max-width: 1200px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .cta-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--dark-bg);
+            color: white;
+            padding: 4rem 0 2rem;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-links h5 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: white;
+        }
+
+        .footer-links ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .social-icon:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+        }
+
+        /* Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-stats {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+{% endblock %}
 
 {% block body %}
-    <h1>Welcome to Dashboard Page!</h1>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="logo" href="{{ path('homepage') }}">
+                <div class="logo-icon">S</div>
+                <span>SwapSkill</span>
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#features">Fonctionnalités</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#how-it-works">Comment ça marche</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#events">Événements</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#testimonials">Témoignages</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about">À propos</a>
+                    </li>
+                </ul>
+
+                <div class="d-flex gap-2">
+                    {% if app.user %}
+                        <a href="{{ path('app_dashboard') }}" class="btn btn-outline-primary">Tableau de bord</a>
+                    {% else %}
+                        <a href="{{ path('app_login') }}" class="btn btn-outline-primary">Connexion</a>
+                        <a href="{{ path('app_register') }}" class="btn-primary-custom">S'inscrire gratuitement</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h1 class="hero-title">Échangez vos compétences, pas votre argent</h1>
+                    <p class="hero-subtitle">
+                        Rejoignez notre communauté d'échange de compétences. Apprenez, enseignez et développez
+                        vos talents sans dépenser un centime. La connaissance n'a pas de prix, elle se partage.
+                    </p>
+                    <div class="d-flex flex-wrap gap-3 mb-4">
+                        {% if app.user %}
+                            <a href="{{ path('app_dashboard') }}" class="btn-primary-custom">
+                                <i class="bi bi-speedometer2"></i>
+                                Accéder au dashboard
+                            </a>
+                        {% else %}
+                            <a href="{{ path('app_register') }}" class="btn-primary-custom">
+                                <i class="bi bi-rocket-takeoff"></i>
+                                Commencer maintenant
+                            </a>
+                            <a href="#how-it-works" class="btn btn-outline-primary">
+                                <i class="bi bi-play-circle"></i>
+                                Voir la démo
+                            </a>
+                        {% endif %}
+                    </div>
+
+                    <div class="hero-stats">
+                        <div class="stat-item">
+                            <div class="stat-number">1,234+</div>
+                            <div class="stat-label">Membres actifs</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">567+</div>
+                            <div class="stat-label">Compétences échangées</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">89+</div>
+                            <div class="stat-label">Événements organisés</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="position-relative floating">
+                        <div class="card feature-card" style="transform: rotate(3deg);">
+                            <div class="feature-icon" style="background: var(--gradient-primary);">
+                                <i class="bi bi-code-slash"></i>
+                            </div>
+                            <h3 class="feature-title">Développement Web</h3>
+                            <p class="feature-description">
+                                Échange des cours de programmation contre des leçons de design graphique
+                            </p>
+                            <div class="d-flex align-items-center gap-2 mt-3">
+                                <div class="rounded-circle bg-primary" style="width: 32px; height: 32px;"></div>
+                                <div class="rounded-circle bg-success" style="width: 32px; height: 32px;"></div>
+                                <span class="text-muted small">+3 autres</span>
+                            </div>
+                        </div>
+
+                        <div class="card feature-card position-absolute" style="top: 50px; left: -30px; transform: rotate(-2deg); z-index: -1;">
+                            <div class="feature-icon" style="background: var(--gradient-accent);">
+                                <i class="bi bi-palette"></i>
+                            </div>
+                            <h3 class="feature-title">Design Graphique</h3>
+                            <p class="feature-description">
+                                Propose des cours de Photoshop en échange de montage vidéo
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features-section">
+        <div class="container">
+            <h2 class="section-title">Pourquoi choisir SwapSkill ?</h2>
+            <p class="section-subtitle">
+                Découvrez les fonctionnalités qui font de SwapSkill la meilleure plateforme d'échange de compétences
+            </p>
+
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon" style="background: var(--gradient-primary);">
+                            <i class="bi bi-arrow-left-right"></i>
+                        </div>
+                        <h3 class="feature-title">Échange équitable</h3>
+                        <p class="feature-description">
+                            Proposez vos compétences et recevez en retour l'aide dont vous avez besoin.
+                            Un système basé sur le troc intelligent.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon" style="background: var(--gradient-accent);">
+                            <i class="bi bi-calendar-event"></i>
+                        </div>
+                        <h3 class="feature-title">Événements communautaires</h3>
+                        <p class="feature-description">
+                            Participez à des ateliers, séminaires et rencontres pour apprendre
+                            et réseauter avec d'autres passionnés.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon" style="background: linear-gradient(135deg, #F59E0B 0%, #FBBF24 100%);">
+                            <i class="bi bi-shield-check"></i>
+                        </div>
+                        <h3 class="feature-title">Sécurité garantie</h3>
+                        <p class="feature-description">
+                            Système de notation et de vérification des membres pour des échanges
+                            en toute confiance.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section id="how-it-works" class="how-it-works">
+        <div class="container">
+            <h2 class="section-title">Comment ça marche ?</h2>
+            <p class="section-subtitle">
+                Rejoignez notre communauté en seulement 4 étapes simples
+            </p>
+
+            <div class="row g-4">
+                <div class="col-lg-3 col-md-6">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <h3 class="step-title">Créez votre profil</h3>
+                        <p class="text-muted">
+                            Inscrivez-vous gratuitement et listez vos compétences, vos disponibilités
+                            et vos besoins d'apprentissage.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <h3 class="step-title">Explorez les compétences</h3>
+                        <p class="text-muted">
+                            Parcourez notre catalogue de compétences et trouvez des membres
+                            disposés à partager leurs connaissances.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <h3 class="step-title">Proposez un échange</h3>
+                        <p class="text-muted">
+                            Contactez d'autres membres et proposez un échange équitable
+                            basé sur vos compétences respectives.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <div class="step-card">
+                        <div class="step-number">4</div>
+                        <h3 class="step-title">Apprenez et grandissez</h3>
+                        <p class="text-muted">
+                            Échangez vos connaissances, participez à des événements et
+                            développez votre réseau professionnel.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Events Section -->
+    <section id="events" class="events-section">
+        <div class="container">
+            <h2 class="section-title">Événements à venir</h2>
+            <p class="section-subtitle">
+                Rejoignez nos prochains ateliers et rencontres communautaires
+            </p>
+
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="event-card">
+                        <div class="event-image">
+                            <i class="bi bi-code-slash"></i>
+                        </div>
+                        <div class="event-content">
+                            <span class="event-category">Développement</span>
+                            <h3 class="event-title">Atelier React.js Avancé</h3>
+                            <p class="text-muted mb-3">
+                                Apprenez les concepts avancés de React avec des experts
+                            </p>
+                            <div class="event-meta">
+                                <span><i class="bi bi-calendar"></i> 15 Nov</span>
+                                <span><i class="bi bi-clock"></i> 18:30</span>
+                            </div>
+                            <a href="#" class="btn btn-outline-primary w-100">S'inscrire</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="event-card">
+                        <div class="event-image">
+                            <i class="bi bi-palette"></i>
+                        </div>
+                        <div class="event-content">
+                            <span class="event-category">Design</span>
+                            <h3 class="event-title">UI/UX Design Workshop</h3>
+                            <p class="text-muted mb-3">
+                                Créez des interfaces utilisateur intuitives et esthétiques
+                            </p>
+                            <div class="event-meta">
+                                <span><i class="bi bi-calendar"></i> 22 Nov</span>
+                                <span><i class="bi bi-clock"></i> 19:00</span>
+                            </div>
+                            <a href="#" class="btn btn-outline-primary w-100">S'inscrire</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="event-card">
+                        <div class="event-image">
+                            <i class="bi bi-graph-up"></i>
+                        </div>
+                        <div class="event-content">
+                            <span class="event-category">Marketing</span>
+                            <h3 class="event-title">SEO pour débutants</h3>
+                            <p class="text-muted mb-3">
+                                Optimisez votre site web pour les moteurs de recherche
+                            </p>
+                            <div class="event-meta">
+                                <span><i class="bi bi-calendar"></i> 28 Nov</span>
+                                <span><i class="bi bi-clock"></i> 17:30</span>
+                            </div>
+                            <a href="#" class="btn btn-outline-primary w-100">S'inscrire</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section id="testimonials" class="testimonials-section">
+        <div class="container">
+            <h2 class="section-title">Ce que disent nos membres</h2>
+            <p class="section-subtitle">
+                Découvrez les expériences de notre communauté
+            </p>
+
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="testimonial-card">
+                        <div class="testimonial-text">
+                            Grâce à SwapSkill, j'ai pu apprendre le développement web en échange
+                            de mes compétences en photographie. Une expérience incroyable !
+                        </div>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">S</div>
+                            <div class="author-info">
+                                <h4>Sophie Martin</h4>
+                                <p>Photographe & Développeuse</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="testimonial-card">
+                        <div class="testimonial-text">
+                            La plateforme m'a permis de trouver un mentor en marketing digital
+                            en échange de mes services de traduction. Win-win !
+                        </div>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">M</div>
+                            <div class="author-info">
+                                <h4>Marc Dubois</h4>
+                                <p>Traducteur & Marketeur</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="testimonial-card">
+                        <div class="testimonial-text">
+                            Les événements communautaires sont fantastiques. J'ai rencontré des
+                            personnes inspirantes et développé mon réseau professionnel.
+                        </div>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">L</div>
+                            <div class="author-info">
+                                <h4>Laura Chen</h4>
+                                <p>Designer UX/UI</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <div class="container">
+        <section class="cta-section">
+            <h2 class="cta-title">Prêt à échanger vos compétences ?</h2>
+            <p class="cta-subtitle">
+                Rejoignez notre communauté de plus de 1,000 membres et commencez à apprendre,
+                enseigner et grandir sans dépenser d'argent.
+            </p>
+            {% if app.user %}
+                <a href="{{ path('app_dashboard') }}" class="btn btn-light btn-lg">
+                    <i class="bi bi-rocket-takeoff"></i>
+                    Accéder à mon dashboard
+                </a>
+            {% else %}
+                <a href="{{ path('app_register') }}" class="btn btn-light btn-lg">
+                    <i class="bi bi-rocket-takeoff"></i>
+                    S'inscrire gratuitement
+                </a>
+            {% endif %}
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <a class="footer-logo" href="{{ path('homepage') }}">
+                        <div class="logo-icon">S</div>
+                        <span>SwapSkill</span>
+                    </a>
+                    <p class="text-white-50">
+                        La première plateforme d'échange de compétences gratuite.
+                        Apprenez, enseignez et développez votre réseau sans dépenser d'argent.
+                    </p>
+                    <div class="social-links">
+                        <a href="#" class="social-icon"><i class="bi bi-twitter"></i></a>
+                        <a href="#" class="social-icon"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="social-icon"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="social-icon"><i class="bi bi-linkedin"></i></a>
+                    </div>
+                </div>
+
+                <div class="col-lg-2 col-md-4 mb-4">
+                    <div class="footer-links">
+                        <h5>Plateforme</h5>
+                        <ul>
+                            <li><a href="#features">Fonctionnalités</a></li>
+                            <li><a href="#how-it-works">Comment ça marche</a></li>
+                            <li><a href="#events">Événements</a></li>
+                            <li><a href="#testimonials">Témoignages</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-lg-2 col-md-4 mb-4">
+                    <div class="footer-links">
+                        <h5>Communauté</h5>
+                        <ul>
+                            <li><a href="#">Membres</a></li>
+                            <li><a href="#">Compétences</a></li>
+                            <li><a href="#">Échanges</a></li>
+                            <li><a href="#">Événements</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-lg-2 col-md-4 mb-4">
+                    <div class="footer-links">
+                        <h5>Légal</h5>
+                        <ul>
+                            <li><a href="#">Conditions d'utilisation</a></li>
+                            <li><a href="#">Politique de confidentialité</a></li>
+                            <li><a href="#">CGU</a></li>
+                            <li><a href="#">Contact</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-lg-2 mb-4">
+                    <div class="footer-links">
+                        <h5>Contact</h5>
+                        <ul>
+                            <li><a href="mailto:contact@swapskill.com">contact@swapskill.com</a></li>
+                            <li><a href="tel:+33123456789">+33 1 23 45 67 89</a></li>
+                            <li>Paris, France</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="copyright">
+                <p>&copy; {{ "now"|date("Y") }} SwapSkill. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Navigation scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Counter animation for stats
+        function animateCounter(element, target) {
+            let current = 0;
+            const increment = target / 100;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    element.textContent = target + '+';
+                    clearInterval(timer);
+                } else {
+                    element.textContent = Math.floor(current) + '+';
+                }
+            }, 20);
+        }
+
+        // Initialize counters when in viewport
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const statNumbers = entry.target.querySelectorAll('.stat-number');
+                    statNumbers.forEach(stat => {
+                        const target = parseInt(stat.textContent);
+                        animateCounter(stat, target);
+                    });
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        // Observe hero section for counter animation
+        const heroSection = document.querySelector('.hero-section');
+        if (heroSection) {
+            observer.observe(heroSection);
+        }
+    </script>
 {% endblock %}

@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\EventRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: EventRepository::class)]
@@ -12,11 +14,6 @@ class Event
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-
-    // Relation ManyToOne vers User (organisateur)
-    #[ORM\ManyToOne(targetEntity: User::class)]
-    #[ORM\JoinColumn(nullable: true, onDelete: "SET NULL")]
-    private ?User $organizer = null;
 
 
     #[ORM\Column(length: 255)]
@@ -43,22 +40,24 @@ class Event
     #[ORM\Column(nullable: true)]
     private ?\DateTime $createdAt = null;
 
-    // ---------------- GETTERS & SETTERS ---------------- //
+    #[ORM\ManyToOne(inversedBy: 'organizedEvents')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $organizer = null;
+
+    /**
+     * @var Collection<int, EventRegistration>
+     */
+    #[ORM\OneToMany(mappedBy: 'event', targetEntity: EventRegistration::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
+    private Collection $registrations;
+
+    public function __construct()
+    {
+        $this->registrations = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getOrganizer(): ?User
-    {
-        return $this->organizer;
-    }
-
-    public function setOrganizer(?User $organizer): static
-    {
-        $this->organizer = $organizer;
-        return $this;
     }
 
     public function getTitle(): ?string
@@ -69,6 +68,7 @@ class Event
     public function setTitle(string $title): static
     {
         $this->title = $title;
+
         return $this;
     }
 
@@ -80,6 +80,7 @@ class Event
     public function setDescription(?string $description): static
     {
         $this->description = $description;
+
         return $this;
     }
 
@@ -91,6 +92,7 @@ class Event
     public function setType(string $type): static
     {
         $this->type = $type;
+
         return $this;
     }
 
@@ -102,6 +104,7 @@ class Event
     public function setDate(?\DateTime $date): static
     {
         $this->date = $date;
+
         return $this;
     }
 
@@ -113,6 +116,7 @@ class Event
     public function setLocation(?string $location): static
     {
         $this->location = $location;
+
         return $this;
     }
 
@@ -124,6 +128,7 @@ class Event
     public function setPrice(?float $price): static
     {
         $this->price = $price;
+
         return $this;
     }
 
@@ -135,6 +140,7 @@ class Event
     public function setCapacity(?int $capacity): static
     {
         $this->capacity = $capacity;
+
         return $this;
     }
 
@@ -146,6 +152,49 @@ class Event
     public function setCreatedAt(?\DateTime $createdAt): static
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getOrganizer(): ?User
+    {
+        return $this->organizer;
+    }
+
+    public function setOrganizer(?User $organizer): static
+    {
+        $this->organizer = $organizer;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, EventRegistration>
+     */
+    public function getRegistrations(): Collection
+    {
+        return $this->registrations;
+    }
+
+    public function addRegistration(EventRegistration $registration): static
+    {
+        if (!$this->registrations->contains($registration)) {
+            $this->registrations->add($registration);
+            $registration->setEvent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRegistration(EventRegistration $registration): static
+    {
+        if ($this->registrations->removeElement($registration)) {
+            // set the owning side to null (unless already changed)
+            if ($registration->getEvent() === $this) {
+                $registration->setEvent(null);
+            }
+        }
+
         return $this;
     }
 }

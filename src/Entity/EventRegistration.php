@@ -14,21 +14,24 @@ class EventRegistration
     #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
+
     // Relation ManyToOne vers User (participant)
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $participant = null;
 
-    // Relation ManyToOne vers Event
-    #[ORM\ManyToOne(targetEntity: Event::class)]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Event $event = null;
 
     #[ORM\Column(type: 'datetime')]
     private \DateTimeInterface $registeredAt;
 
     #[ORM\Column(length: 20)]
-    private string $status; // "confirmed", "pending", "cancelled"
+    private string $status;
+
+    #[ORM\ManyToOne(inversedBy: 'eventRegistrations')]
+    private ?User $user = null;
+
+    #[ORM\ManyToOne(inversedBy: 'registrations')]
+    private ?Event $event = null; // "confirmed", "pending", "cancelled"
 
     public function __construct()
     {
@@ -53,16 +56,6 @@ class EventRegistration
         return $this;
     }
 
-    public function getEvent(): ?Event
-    {
-        return $this->event;
-    }
-
-    public function setEvent(Event $event): self
-    {
-        $this->event = $event;
-        return $this;
-    }
 
     public function getRegisteredAt(): \DateTimeInterface
     {
@@ -83,6 +76,30 @@ class EventRegistration
     public function setStatus(string $status): self
     {
         $this->status = $status;
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function getEvent(): ?Event
+    {
+        return $this->event;
+    }
+
+    public function setEvent(?Event $event): static
+    {
+        $this->event = $event;
+
         return $this;
     }
 }
