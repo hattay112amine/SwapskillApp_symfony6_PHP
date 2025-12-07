@@ -7,7 +7,8 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -41,17 +42,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?bool $status = null;
 
-    #[ORM\Column(type: Types::ARRAY, nullable: true)]
-    private ?array $offeredSkill = null;
-
-    #[ORM\Column(type: Types::ARRAY, nullable: true)]
-    private ?array $requestedSkill = null;
-
     #[ORM\Column(nullable: true)]
     private ?\DateTime $createdAt = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $googleId = null;
+
+    // src/Entity/User.php
+    #[ORM\OneToMany(mappedBy: "owner", targetEntity: Skill::class)]
+    private Collection $skills;
+
 
     public function getId(): ?int
     {
@@ -163,29 +163,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getOfferedSkill(): ?array
-    {
-        return $this->offeredSkill;
-    }
-
-    public function setOfferedSkill(?array $offeredSkill): static
-    {
-        $this->offeredSkill = $offeredSkill;
-
-        return $this;
-    }
-
-    public function getRequestedSkill(): ?array
-    {
-        return $this->requestedSkill;
-    }
-
-    public function setRequestedSkill(?array $requestedSkill): static
-    {
-        $this->requestedSkill = $requestedSkill;
-
-        return $this;
-    }
 
     public function getCreatedAt(): ?\DateTime
     {
@@ -219,6 +196,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // Clear temporary sensitive data if any
     }
 
+    public function __construct()
+    {
+        $this->skills = new ArrayCollection();
+    }
 
 
 }

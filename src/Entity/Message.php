@@ -83,4 +83,39 @@ class Message
 
         return $this;
     }
+    public function getSender(): ?User
+    {
+        return $this->sender;
+    }
+
+    public function setSender(?User $sender): static
+    {
+        $this->sender = $sender;
+
+        return $this;
+    }
+
+    public function getReceiver(): ?User
+    {
+        return $this->receiver;
+    }
+
+    public function setReceiver(?User $receiver): static
+    {
+        $this->receiver = $receiver;
+
+        return $this;
+    }
+
+    public function getExchangeProposal(): ?ExchangeProposal
+    {
+        return $this->exchangeProposal;
+    }
+
+    public function setExchangeProposal(?ExchangeProposal $exchangeProposal): static
+    {
+        $this->exchangeProposal = $exchangeProposal;
+
+        return $this;
+    }
 }

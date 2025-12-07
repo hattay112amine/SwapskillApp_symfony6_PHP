@@ -19,8 +19,41 @@ class Notification
     #[ORM\Column(nullable: true)]
     private ?bool $isRead = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?\DateTime $createdAt = null;
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTimeInterface $createdAt = null;
+
+
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
+
+    #[ORM\ManyToOne(targetEntity: ExchangeProposal::class)]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?ExchangeProposal $proposal = null;
+
+    public function getProposal(): ?ExchangeProposal
+    {
+        return $this->proposal;
+    }
+
+    public function setProposal(?ExchangeProposal $proposal): static
+    {
+        $this->proposal = $proposal;
+        return $this;
+    }
+
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(User $user): static
+    {
+        $this->user = $user;
+        return $this;
+    }
+
 
     public function getId(): ?int
     {

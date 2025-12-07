@@ -1,0 +1,52 @@
+<li class="nav-item dropdown mx-auto">
+    <a class="nav-link position-relative" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="bi bi-bell-fill fs-4"></i>
+
+        {% if notifications|length > 0 %}
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning">
+                {{ notifications|length }}
+                <span class="visually-hidden">unread notifications</span>
+            </span>
+        {% endif %}
+    </a>
+
+    <ul class="dropdown-menu p-2 shadow" style="min-width: 300px;">
+        <li class="dropdown-header">
+            {{ notifications|length }} Notification{{ notifications|length > 1 ? 's' : '' }}
+        </li>
+        <li><hr class="dropdown-divider"></li>
+
+        {% if notifications|length > 0 %}
+            {% for note in notifications %}
+                {% if note.proposal %}
+                    <li>
+
+                        <a href="{{ path('notification_read', {'id': note.id}) }}"
+                           class="dropdown-item d-flex justify-content-between align-items-start {% if not note.isRead %}fw-bold{% endif %}">
+                            <div class="me-2">
+                                {% if note.type == 'accepted' %}
+                                    <i class="bi bi-check-circle text-success me-2"></i>
+                                    Your proposal <strong>{{ note.proposal.offeredSkill.title }} → {{ note.proposal.requestedSkill.title }}</strong> was <strong>accepted</strong>!
+                                {% elseif note.type == 'refused' %}
+                                    <i class="bi bi-x-circle text-danger me-2"></i>
+                                    Your proposal <strong>{{ note.proposal.offeredSkill.title }} → {{ note.proposal.requestedSkill.title }}</strong> was <strong>refused</strong>.
+                                {% else %}
+                                    <i class="bi bi-info-circle text-primary me-2"></i>
+                                    {{ note.type|capitalize }}
+                                {% endif %}
+                            </div>
+                            <span class="float-end text-secondary fs-7">{{ note.createdAt|date('H:i d M Y') }}</span>
+                        </a>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            <li><span class="dropdown-item text-muted">No new notifications</span></li>
+        {% endif %}
+
+        <li><a href="{{ path('notifications_list') }}" class="dropdown-item dropdown-footer">See All Notifications</a>
+        </li>
+
+    </ul>
+</li>

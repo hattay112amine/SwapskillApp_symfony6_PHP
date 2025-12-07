@@ -25,7 +25,7 @@ security:
             success_handler: App\Security\LoginSuccessHandler
           logout:
             path: logout
-            target: /
+            target: /login
           custom_authenticators:
             - App\Security\GoogleAuthenticator
           remember_me:

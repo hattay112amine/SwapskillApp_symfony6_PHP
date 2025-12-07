@@ -21,7 +21,7 @@ class UserFixtures extends Fixture
         // Regular user
         $user = new User();
         $user->setEmail('test@example.com');
-        $user->setName('Test User');
+        $user->setName('John Doe');
         $user->setPhone('12345678');
 
         // Hash password
@@ -30,16 +30,18 @@ class UserFixtures extends Fixture
         );
 
         $manager->persist($user);
+        $this->addReference('user_test', $user);
         // Admin user
         $admin = new User();
         $admin->setEmail('admin@example.com');
-        $admin->setName('Admin User');
+        $admin->setName('Jane Smith');
         $admin->setPhone('87654321');
         $admin->setRoles(['ROLE_ADMIN']);
         $admin->setPassword(
             $this->passwordHasher->hashPassword($admin, 'adminpassword')
         );
         $manager->persist($admin);
+        $this->addReference('admin_test', $admin);
 
         $manager->flush();
     }

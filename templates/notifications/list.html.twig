@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Notifications{% endblock %}
+
+{% block body %}
+    <div class="container py-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h1>All Notifications</h1>
+            <a href="{{ path('notifications_read_all') }}" class="btn btn-sm btn-primary">Mark All as Read</a>
+        </div>
+
+        {% if notifications|length > 0 %}
+            <ul class="list-group">
+                {% for note in notifications %}
+                    <li class="list-group-item d-flex justify-content-between align-items-start {% if not note.isRead %}fw-bold{% endif %}">
+                        <a href="{{ path('notification_read', {'id': note.id}) }}" class="text-decoration-none">
+                            {% if note.proposal %}
+                                {% if note.type == 'accepted' %}
+                                    <i class="bi bi-check-circle text-success me-2"></i>
+                                    Your proposal <strong>{{ note.proposal.offeredSkill.title }} → {{ note.proposal.requestedSkill.title }}</strong> was <strong>accepted</strong>!
+                                {% elseif note.type == 'refused' %}
+                                    <i class="bi bi-x-circle text-danger me-2"></i>
+                                    Your proposal <strong>{{ note.proposal.offeredSkill.title }} → {{ note.proposal.requestedSkill.title }}</strong> was <strong>refused</strong>.
+                                {% endif %}
+                            {% else %}
+                                <i class="bi bi-info-circle text-primary me-2"></i>
+                                {{ note.type|capitalize }}
+                            {% endif %}
+                        </a>
+                        <span class="text-secondary fs-7">{{ note.createdAt|date('H:i d M Y') }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="text-muted">No notifications yet.</p>
+        {% endif %}
+    </div>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Chat Session{% endblock %}
+
+{% block body %}
+    <div class="container py-4">
+        <h3>Chat between {{ user.name }} and {{ partner.name }}</h3>
+
+        <div class="chat-box border p-3 mb-3" style="height:300px; overflow-y:scroll;">
+            {% for message in messages %}
+                <div class="mb-2 {% if message.sender.id == user.id %}text-end{% endif %}">
+                    <strong>{{ message.sender.name }}:</strong> {{ message.content }}
+                </div>
+
+            {% else %}
+                <p class="text-muted">No messages yet.</p>
+            {% endfor %}
+        </div>
+
+        <form method="post" class="d-flex">
+            <input type="text" name="message" class="form-control me-2" placeholder="Type your message...">
+            <button type="submit" class="btn btn-primary">Send</button>
+        </form>
+
+    </div>
+{% endblock %}

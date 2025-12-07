@@ -28,23 +28,69 @@ class ExchangeProposal
     private ?string $proposal = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $status = null;
+    private ?string $status = 'pending';
 
-    #[ORM\Column(nullable: true)]
-    private ?\DateTime $createdAt = null;
+    #[ORM\Column(type: 'datetime')]
+    private ?\DateTimeInterface $createdAt = null;
+
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $requester = null;
+
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $receiver = null;
+
+
+    public function getReceiver(): ?User
+    {
+        return $this->receiver;
+    }
+
+    public function setReceiver(User $receiver): static
+    {
+        $this->receiver = $receiver;
+        return $this;
+    }
+
+
+
 
     public function getId(): ?int
     {
         return $this->id;
     }
-
-    public function setId(int $id): static
+    public function getRequester(): ?User
     {
-        $this->id = $id;
+        return $this->requester;
+    }
 
+    public function setRequester(User $requester): static
+    {
+        $this->requester = $requester;
+        return $this;
+    }
+    public function getOfferedSkill(): ?Skill
+    {
+        return $this->offeredSkill;
+    }
+
+    public function setOfferedSkill(Skill $offeredSkill): static
+    {
+        $this->offeredSkill = $offeredSkill;
         return $this;
     }
 
+    public function getRequestedSkill(): ?Skill
+    {
+        return $this->requestedSkill;
+    }
+
+    public function setRequestedSkill(Skill $requestedSkill): static
+    {
+        $this->requestedSkill = $requestedSkill;
+        return $this;
+    }
     public function getProposal(): ?string
     {
         return $this->proposal;

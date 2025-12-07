@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Propose an Exchange{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <div class="card card-info card-outline mb-4">
+            <!-- Card header -->
+            <div class="card-header">
+                <h5 class="card-title">Propose an Exchange</h5>
+            </div>
+            <!-- Card body -->
+            <div class="card-body">
+                {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
+
+                <div class="row g-3">
+                    <!-- Offered Skill -->
+                    <div class="col-md-6">
+                        {{ form_label(form.offeredSkill) }}
+                        {{ form_widget(form.offeredSkill, {'attr': {'class': 'form-select'}}) }}
+                        {{ form_errors(form.offeredSkill) }}
+                    </div>
+
+                    <!-- Requested Skill -->
+                    <div class="col-md-6">
+                        {{ form_label(form.requestedSkill) }}
+                        {{ form_widget(form.requestedSkill, {'attr': {'class': 'form-select'}}) }}
+                        {{ form_errors(form.requestedSkill) }}
+                    </div>
+
+                    <!-- Proposal message -->
+                    <div class="col-12">
+                        {{ form_label(form.proposal) }}
+                        {{ form_widget(form.proposal, {'attr': {'class': 'form-control', 'placeholder': 'Optional message'}}) }}
+                        {{ form_errors(form.proposal) }}
+                    </div>
+                </div>
+
+                <!-- Submit button -->
+                <div class="card-footer mt-3">
+                    <button class="btn btn-info" type="submit">Submit Proposal</button>
+                </div>
+
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+
+    <!-- Optional Bootstrap validation JS -->
+    <script>
+        (() => {
+            'use strict';
+
+            const forms = document.querySelectorAll('.needs-validation');
+
+            Array.from(forms).forEach((form) => {
+                form.addEventListener('submit', (event) => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        })();
+    </script>
+{% endblock %}

@@ -28,6 +28,23 @@ class Skill
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $availability = null;
 
+
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: "skills")]
+    #[ORM\JoinColumn(nullable: true)] // allow nulls
+    private ?User $owner = null;
+
+
+    public function getOwner(): ?User
+    {
+        return $this->owner;
+    }
+
+    public function setOwner(User $owner): static
+    {
+        $this->owner = $owner;
+        return $this;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

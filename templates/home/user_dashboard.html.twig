@@ -3,5 +3,173 @@
 {% block title %}SkillSwap{% endblock %}
 
 {% block body %}
-    <h1>Welcome to Dashboard Page!</h1>
+
+{#    <ul class="navbar-nav ms-auto p-2 m-2 border rounded"#}
+{#        style="border-color: #2c3e50; background-color: #f8f9fa;">#}
+{#        <!-- Notifications Dropdown Menu -->#}
+{#        <!-- Navbar notifications -->#}
+{#        <li class="nav-item dropdown mx-auto">#}
+{#            <a class="nav-link position-relative" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">#}
+{#                <i class="bi bi-bell-fill fs-4"></i>#}
+
+{#                {% if notifications|length > 0 %}#}
+{#                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning">#}
+{#                {{ notifications|length }}#}
+{#                <span class="visually-hidden">unread notifications</span>#}
+{#            </span>#}
+{#                {% endif %}#}
+{#            </a>#}
+
+{#            <ul class="dropdown-menu p-2 shadow" style="min-width: 300px;">#}
+{#                <li class="dropdown-header">#}
+{#                    {{ notifications|length }} Notification{{ notifications|length > 1 ? 's' : '' }}#}
+{#                </li>#}
+{#                <li><hr class="dropdown-divider"></li>#}
+
+{#                {% if notifications|length > 0 %}#}
+{#                    {% for note in notifications %}#}
+{#                        {% if note.proposal %}#}
+{#                            <li>#}
+
+{#                                <a href="{{ path('notification_read', {'id': note.id}) }}"#}
+{#                                   class="dropdown-item d-flex justify-content-between align-items-start {% if not note.isRead %}fw-bold{% endif %}">#}
+{#                                    <div class="me-2">#}
+{#                                    {% if note.type == 'accepted' %}#}
+{#                                        <i class="bi bi-check-circle text-success me-2"></i>#}
+{#                                        Your proposal <strong>{{ note.proposal.offeredSkill.title }} → {{ note.proposal.requestedSkill.title }}</strong> was <strong>accepted</strong>!#}
+{#                                    {% elseif note.type == 'refused' %}#}
+{#                                        <i class="bi bi-x-circle text-danger me-2"></i>#}
+{#                                        Your proposal <strong>{{ note.proposal.offeredSkill.title }} → {{ note.proposal.requestedSkill.title }}</strong> was <strong>refused</strong>.#}
+{#                                    {% else %}#}
+{#                                        <i class="bi bi-info-circle text-primary me-2"></i>#}
+{#                                        {{ note.type|capitalize }}#}
+{#                                    {% endif %}#}
+{#                                    </div>#}
+{#                                    <span class="float-end text-secondary fs-7">{{ note.createdAt|date('H:i d M Y') }}</span>#}
+{#                                </a>#}
+{#                            </li>#}
+{#                            <li><hr class="dropdown-divider"></li>#}
+{#                        {% endif %}#}
+{#                    {% endfor %}#}
+{#                {% else %}#}
+{#                    <li><span class="dropdown-item text-muted">No new notifications</span></li>#}
+{#                {% endif %}#}
+
+{#                <li><a href="{{ path('notifications_list') }}" class="dropdown-item dropdown-footer">See All Notifications</a>#}
+{#                </li>#}
+
+{#            </ul>#}
+{#        </li>#}
+
+{#    </ul>#}
+
+{#    <div class="container py-4">#}
+
+{#        <div class="text-center p-4 mb-4" style="background-color: #2c3e50; border-radius: 10px; color: white;">#}
+{#            <h1 class="mb-0">Welcome to Your SkillSwap Hub</h1>#}
+{#        </div>#}
+
+
+{#        <div class="row g-4 mb-4">#}
+{#            #}{# Section for proposals you requested #}
+{#            <div class="col-12 mb-3">#}
+{#                <h2 class="text-primary"><i class="bi bi-send-fill me-2"></i>Proposals You Requested</h2>#}
+{#                <p class="text-muted">These are the skills you have offered and want to exchange.</p>#}
+{#            </div>#}
+{#            {% for proposal in madeProposals %}#}
+{#                <div class="col-md-3">#}
+{#                    <div class="card border-primary shadow-sm p-3">#}
+{#                        <div class="card-header bg-primary text-white p-3">#}
+{#                            <h5 class="mb-0">#}
+{#                                <i class="bi bi-arrow-right-circle me-1"></i>#}
+{#                                {{ proposal.offeredSkill.title }} → {{ proposal.requestedSkill.title }}#}
+{#                            </h5>#}
+{#                            <small class="text-light">Requested by you</small>#}
+{#                        </div>#}
+{#                        <div class="card-body p-3">#}
+{#                            <p><strong>Offered Skill:</strong> {{ proposal.offeredSkill.title }}</p>#}
+{#                            <p><strong>Requested Skill:</strong> {{ proposal.requestedSkill.title }}</p>#}
+{#                            <p><strong>Status:</strong> <span class="badge bg-warning text-dark">{{ proposal.status|capitalize }}</span></p>#}
+{#                            <p><strong>Notes:</strong> {{ proposal.proposal ?: '—' }}</p>#}
+
+{#                            {% if proposal.status == 'pending' %}#}
+{#                                <span class="badge bg-warning mt-2">Waiting for response</span>#}
+
+{#                            {% elseif proposal.status == 'accepted' %}#}
+{#                                <span class="badge bg-success mt-2">Accepted</span>#}
+
+{#                                <div class="mt-3">#}
+{#                                    <p><strong>Schedule Exchange Session:</strong></p>#}
+{#                                    <a href="{{ path('chat_session', {'proposalId': proposal.id}) }}" class="btn btn-primary btn-sm">#}
+{#                                        Go to Chat & Schedule#}
+{#                                    </a>#}
+{#                                </div>#}
+
+{#                            {% elseif proposal.status == 'refused' %}#}
+{#                                <span class="badge bg-danger mt-2">Refused</span>#}
+
+{#                            {% endif %}#}
+
+
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#            {% else %}#}
+{#                <div class="col-12">#}
+{#                    <p class="text-muted">No proposals requested yet.</p>#}
+{#                </div>#}
+{#            {% endfor %}#}
+
+{#            #}{# Section for proposals you received #}
+{#            <div class="col-12 mt-5 mb-3">#}
+{#                <h2 class="text-success"><i class="bi bi-inbox-fill me-2"></i>Proposals You Received</h2>#}
+{#                <p class="text-muted">These are the skills other users want to exchange with you.</p>#}
+{#            </div>#}
+{#            {% for proposal in receivedProposals %}#}
+{#                <div class="col-md-3">#}
+{#                    <div class="card border-success shadow-sm p-3">#}
+{#                        <div class="card-header bg-success text-white p-3">#}
+{#                            <h5 class="mb-0">#}
+{#                                <i class="bi bi-arrow-left-circle me-1"></i>#}
+{#                                {{ proposal.requestedSkill.title }} → {{ proposal.offeredSkill.title }}#}
+{#                            </h5>#}
+{#                            <small class="text-light">Requested by {{ proposal.requester.name }}</small>#}
+{#                        </div>#}
+{#                        <div class="card-body p-3">#}
+{#                            <p><strong>Requested Skill:</strong> {{ proposal.requestedSkill.title }}</p>#}
+{#                            <p><strong>Offered Skill:</strong> {{ proposal.offeredSkill.title }}</p>#}
+{#                            <p><strong>Status:</strong> <span class="badge bg-warning text-dark">{{ proposal.status|capitalize }}</span></p>#}
+{#                            <p><strong>Notes:</strong> {{ proposal.proposal ?: '—' }}</p>#}
+
+{#                            {% if proposal.status == 'pending' %}#}
+{#                                <div class="d-flex justify-content-between mt-3">#}
+{#                                    <a href="{{ path('proposal_accept', {'id': proposal.id}) }}" class="btn btn-success btn-sm">Accept</a>#}
+{#                                    <a href="{{ path('proposal_refuse', {'id': proposal.id}) }}" class="btn btn-danger btn-sm">Refuse</a>#}
+{#                                </div>#}
+
+{#                            {% elseif proposal.status == 'accepted' %}#}
+{#                                <span class="badge bg-success mt-2">Accepted</span>#}
+
+{#                                <div class="mt-3">#}
+{#                                    <p><strong>Start Exchange Session:</strong></p>#}
+{#                                    <a href="{{ path('chat_session', {'proposalId': proposal.id}) }}" class="btn btn-primary btn-sm">#}
+{#                                        Go to Chat & Schedule#}
+{#                                    </a>#}
+{#                                </div>#}
+
+{#                            {% elseif proposal.status == 'refused' %}#}
+{#                                <span class="badge bg-danger mt-2">Refused</span>#}
+{#                            {% endif %}#}
+
+
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#            {% else %}#}
+{#                <div class="col-12">#}
+{#                    <p class="text-muted">No proposals received yet.</p>#}
+{#                </div>#}
+{#            {% endfor %}#}
+{#        </div>#}
+{#    </div>#}
 {% endblock %}
