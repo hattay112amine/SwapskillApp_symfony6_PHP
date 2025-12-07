@@ -15,12 +15,12 @@ class Rating
 
     // Relation ManyToOne vers User (utilisateur qui fait le rating)
     #[ORM\ManyToOne(targetEntity: User::class)]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true, onDelete: "SET NULL")]
     private ?User $fromUser = null;
 
     // Relation ManyToOne vers User (utilisateur qui reçoit le rating)
     #[ORM\ManyToOne(targetEntity: User::class)]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true, onDelete: "SET NULL")]
     private ?User $toUser = null;
 
     #[ORM\Column(nullable: true)]
@@ -32,27 +32,37 @@ class Rating
     #[ORM\Column(nullable: true)]
     private ?\DateTime $createdAt = null;
 
+
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function setId(string $id): static
+    public function setId(int $id): static
     {
         $this->id = $id;
-
         return $this;
     }
 
-    public function getFromUser(): ?string
+    public function getFromUser(): ?User
     {
         return $this->fromUser;
     }
 
-    public function setFromUser(string $fromUser): static
+    public function setFromUser(?User $fromUser): static
     {
         $this->fromUser = $fromUser;
+        return $this;
+    }
 
+    public function getToUser(): ?User
+    {
+        return $this->toUser;
+    }
+
+    public function setToUser(?User $toUser): static
+    {
+        $this->toUser = $toUser;
         return $this;
     }
 
@@ -64,7 +74,6 @@ class Rating
     public function setScore(?int $score): static
     {
         $this->score = $score;
-
         return $this;
     }
 
@@ -76,7 +85,6 @@ class Rating
     public function setComment(?string $comment): static
     {
         $this->comment = $comment;
-
         return $this;
     }
 
@@ -88,7 +96,6 @@ class Rating
     public function setCreatedAt(?\DateTime $createdAt): static
     {
         $this->createdAt = $createdAt;
-
         return $this;
     }
 }

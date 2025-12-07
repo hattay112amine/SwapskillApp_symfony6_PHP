@@ -34,16 +34,10 @@ class Skill
     private ?User $owner = null;
 
 
-    public function getOwner(): ?User
-    {
-        return $this->owner;
-    }
+//    #[ORM\ManyToOne(inversedBy: 'skills')]
+//    #[ORM\JoinColumn(nullable: false)]
+//    private ?User $owner = null;
 
-    public function setOwner(User $owner): static
-    {
-        $this->owner = $owner;
-        return $this;
-    }
 
     public function getId(): ?int
     {
@@ -116,4 +110,19 @@ class Skill
 
         return $this;
     }
+
+    public function getOwner(): ?User
+    {
+        return $this->owner;
+    }
+
+    public function setOwner(?User $owner): static
+    {
+        $this->owner = $owner;
+
+        return $this;
+    }
+
+
+
 }

@@ -13,20 +13,16 @@ class Message
     #[ORM\Column]
     private ?int $id = null;
 
-    // Relation ManyToOne vers User (expéditeur)
+    // Expéditeur
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $sender = null;
 
-    // Relation ManyToOne vers User (destinataire)
+    // Destinataire
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $receiver = null;
 
-    // Relation ManyToOne vers ExchangeProposal (message lié à une proposition)
-    #[ORM\ManyToOne(targetEntity: ExchangeProposal::class)]
-    #[ORM\JoinColumn(nullable: true)]
-    private ?ExchangeProposal $exchangeProposal = null;
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $content = null;
 
@@ -41,10 +37,25 @@ class Message
         return $this->id;
     }
 
-    public function setId(int $id): static
+    public function getSender(): ?User
     {
-        $this->id = $id;
+        return $this->sender;
+    }
 
+    public function setSender(User $sender): static
+    {
+        $this->sender = $sender;
+        return $this;
+    }
+
+    public function getReceiver(): ?User
+    {
+        return $this->receiver;
+    }
+
+    public function setReceiver(User $receiver): static
+    {
+        $this->receiver = $receiver;
         return $this;
     }
 
@@ -56,7 +67,6 @@ class Message
     public function setContent(?string $content): static
     {
         $this->content = $content;
-
         return $this;
     }
 
@@ -68,7 +78,6 @@ class Message
     public function setIsRead(?bool $isRead): static
     {
         $this->isRead = $isRead;
-
         return $this;
     }
 
@@ -80,7 +89,6 @@ class Message
     public function setCreatedAt(?\DateTime $createdAt): static
     {
         $this->createdAt = $createdAt;
-
         return $this;
     }
     public function getSender(): ?User

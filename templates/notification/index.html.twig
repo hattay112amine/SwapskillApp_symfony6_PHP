@@ -1,0 +1,741 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Notifications - SwapSkill{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary: #6366F1;
+            --primary-dark: #4F46E5;
+            --secondary: #8B5CF6;
+            --accent: #10B981;
+            --warning: #F59E0B;
+            --light-bg: #F8FAFC;
+            --dark-bg: #1E293B;
+            --card-bg: #FFFFFF;
+            --text-primary: #334155;
+            --text-secondary: #64748B;
+            --gradient-primary: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+            --gradient-accent: linear-gradient(135deg, #10B981 0%, #34D399 100%);
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--text-primary);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+        }
+
+        /* Header de navigation */
+        .notifications-header {
+            background: white;
+            border-bottom: 1px solid #E2E8F0;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .back-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            background: white;
+            border: 1px solid #E2E8F0;
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .back-button:hover {
+            background: #F8FAFC;
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .header-title h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .header-title p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* Contenu principal */
+        .notifications-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Statistiques */
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid #F1F5F9;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .stat-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .stat-info h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-info p {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        /* Filtres */
+        .filters-container {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid #F1F5F9;
+        }
+
+        .filters-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .filters-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid #E2E8F0;
+            background: white;
+            border-radius: var(--radius-md);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .filter-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        /* Grille de notifications */
+        .notifications-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* Cartes de notification */
+        .notification-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid #F1F5F9;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .notification-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .notification-card.unread {
+            border-left: 4px solid var(--primary);
+            background: #F8FAFC;
+        }
+
+        .notification-card.unread::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--primary);
+        }
+
+        .notification-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .notification-type {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .type-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .type-badge.proposal {
+            background: #E0F2FE;
+            color: #0C4A6E;
+        }
+
+        .type-badge.acceptance {
+            background: #DCFCE7;
+            color: #14532D;
+        }
+
+        .type-badge.rating {
+            background: #FEF3C7;
+            color: #78350F;
+        }
+
+        .type-badge.system {
+            background: #F3E8FF;
+            color: #581C87;
+        }
+
+        .notification-time {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .notification-content {
+            margin-bottom: 1.25rem;
+        }
+
+        .notification-message {
+            font-size: 1rem;
+            color: var(--text-primary);
+            line-height: 1.5;
+            margin-bottom: 0.75rem;
+        }
+
+        .notification-status {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .notification-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1.25rem;
+            padding-top: 1rem;
+            border-top: 1px solid #F1F5F9;
+        }
+
+        .action-button {
+            flex: 1;
+            padding: 0.5rem;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .action-button.primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .action-button.primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .action-button.secondary {
+            background: white;
+            color: var(--text-primary);
+            border: 1px solid #E2E8F0;
+        }
+
+        .action-button.secondary:hover {
+            background: #F8FAFC;
+            border-color: var(--primary);
+        }
+
+        /* Section vide */
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 4rem 2rem;
+            background: white;
+            border-radius: var(--radius-lg);
+            border: 2px dashed #E2E8F0;
+        }
+
+        .empty-icon {
+            width: 80px;
+            height: 80px;
+            background: #F8FAFC;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2.5rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-description {
+            color: var(--text-secondary);
+            max-width: 400px;
+            margin: 0 auto 1.5rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .notifications-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+
+            .notifications-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filters-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+
+            .filter-buttons {
+                width: 100%;
+                flex-wrap: wrap;
+            }
+
+            .notification-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <!-- En-tête -->
+    <header class="notifications-header">
+        <div class="header-left">
+            <a href="{{ path('app_dashboard') }}" class="back-button">
+                <i class="bi bi-arrow-left"></i>
+                Retour au tableau de bord
+            </a>
+            <div class="header-title">
+                <h1>Mes notifications</h1>
+                <p>Restez informé de toutes vos activités SwapSkill</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Contenu principal -->
+    <div class="notifications-container">
+        {% set unread_count = notifications|filter(n => not n.isRead)|length %}
+        {% set proposal_count = notifications|filter(n => n.type == 'proposal')|length %}
+        {% set acceptance_count = notifications|filter(n => n.type == 'acceptance')|length %}
+        {% set rating_count = notifications|filter(n => n.type == 'rating')|length %}
+
+        <!-- Statistiques -->
+        <div class="stats-cards">
+            <div class="stat-card">
+                <div class="stat-icon" style="background: var(--gradient-primary);">
+                    <i class="bi bi-bell"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>{{ notifications|length }}</h3>
+                    <p>Total des notifications</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #3B82F6 0%, #60A5FA 100%);">
+                    <i class="bi bi-envelope"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>{{ unread_count }}</h3>
+                    <p>Non lues</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background: var(--gradient-accent);">
+                    <i class="bi bi-hand-thumbs-up"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>{{ proposal_count }}</h3>
+                    <p>Propositions</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #F59E0B 0%, #FBBF24 100%);">
+                    <i class="bi bi-star"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>{{ rating_count }}</h3>
+                    <p>Évaluations</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filtres -->
+        <div class="filters-container">
+            <div class="filters-header">
+                <h3 class="filters-title">Filtrer les notifications</h3>
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="all">Toutes</button>
+                    <button class="filter-btn" data-filter="unread">Non lues</button>
+                    <button class="filter-btn" data-filter="proposal">Propositions</button>
+                    <button class="filter-btn" data-filter="acceptance">Acceptations</button>
+                    <button class="filter-btn" data-filter="rating">Évaluations</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Grille de notifications -->
+        <div class="notifications-grid">
+            {% if notifications|length > 0 %}
+                {% for notification in notifications %}
+                    <div class="notification-card {% if not notification.isRead %}unread{% endif %}"
+                         data-notification-type="{{ notification.type }}">
+                        <div class="notification-header">
+                            <div class="notification-type">
+                                {% if notification.type == 'proposal' %}
+                                    <span class="type-badge proposal">
+                                        <i class="bi bi-arrow-up-circle"></i> Proposition
+                                    </span>
+                                {% elseif notification.type == 'acceptance' %}
+                                    <span class="type-badge acceptance">
+                                        <i class="bi bi-check-circle"></i> Acceptation
+                                    </span>
+                                {% elseif notification.type == 'rating' %}
+                                    <span class="type-badge rating">
+                                        <i class="bi bi-star"></i> Évaluation
+                                    </span>
+                                {% else %}
+                                    <span class="type-badge system">
+                                        <i class="bi bi-info-circle"></i> Système
+                                    </span>
+                                {% endif %}
+
+                                {% if not notification.isRead %}
+                                    <span class="badge" style="background: #3B82F6; color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.7rem;">
+                                        Nouveau
+                                    </span>
+                                {% endif %}
+                            </div>
+                            <div class="notification-time">
+                                <i class="bi bi-clock"></i>
+                                {{ notification.createdAt ? notification.createdAt|date('d/m/Y H:i') : 'Date inconnue' }}
+                            </div>
+                        </div>
+
+                        <div class="notification-content">
+                            <p class="notification-message">{{ notification.content }}</p>
+
+                            <div class="notification-status">
+                                {% if notification.isRead %}
+                                    <span class="text-success">
+                                        <i class="bi bi-check-circle"></i> Lu
+                                    </span>
+                                {% else %}
+                                    <span class="text-primary">
+                                        <i class="bi bi-circle"></i> Non lu
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="notification-actions">
+                            {% if not notification.isRead %}
+                                <button class="mark-read-btn" data-id="{{ notification.id }}">
+                                    <i class="bi bi-check"></i> Marquer comme lu
+                                </button>
+                            {% endif %}
+
+                            {% if notification.type == 'proposal' %}
+                                <!-- Formulaire pour accepter une proposition -->
+                                <form method="post" action="{{ path('notification_send_acceptance') }}" style="flex: 1;">
+                                    <input type="hidden" name="toUserId" value="{{ notification.initiator ? notification.initiator.id : '' }}">
+                                    <button type="submit" class="action-button primary w-100">
+                                        <i class="bi bi-check-lg"></i>
+                                        Accepter
+                                    </button>
+                                </form>
+                            {% endif %}
+
+                            {% if notification.type == 'rating' %}
+                                <!-- Formulaire pour noter en retour -->
+                                <button type="button" class="action-button secondary" data-bs-toggle="modal" data-bs-target="#rateModal{{ notification.id }}">
+                                    <i class="bi bi-star"></i>
+                                    Noter en retour
+                                </button>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Modal pour noter en retour (si c'est une évaluation) -->
+                    {% if notification.type == 'rating' and notification.initiator %}
+                        <div class="modal fade" id="rateModal{{ notification.id }}" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Évaluer {{ notification.initiator.name }}</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <form method="post" action="{{ path('notification_send_rating') }}">
+                                        <div class="modal-body">
+                                            <input type="hidden" name="toUserId" value="{{ notification.initiator.id }}">
+
+                                            <div class="mb-3">
+                                                <label class="form-label">Note (1-5)</label>
+                                                <div class="rating-stars mb-2">
+                                                    {% for i in 1..5 %}
+                                                        <i class="bi bi-star rating-star" data-value="{{ i }}" style="font-size: 1.5rem; cursor: pointer; color: #ddd;"></i>
+                                                    {% endfor %}
+                                                </div>
+                                                <input type="hidden" name="score" id="score{{ notification.id }}" value="5">
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label class="form-label">Commentaire (optionnel)</label>
+                                                <textarea name="comment" class="form-control" rows="3" placeholder="Votre commentaire..."></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                            <button type="submit" class="btn btn-primary">Envoyer l'évaluation</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <div class="empty-icon">
+                        <i class="bi bi-bell"></i>
+                    </div>
+                    <h3 class="empty-title">Aucune notification</h3>
+                    <p class="empty-description">
+                        Vous n'avez pas encore de notifications. Revenez plus tard pour voir vos activités récentes.
+                    </p>
+                    <a href="{{ path('app_dashboard') }}" class="btn btn-primary">
+                        <i class="bi bi-house"></i>
+                        Retour au tableau de bord
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Filtrage des notifications
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Mettre à jour les boutons actifs
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+
+                    const filter = this.dataset.filter;
+                    const cards = document.querySelectorAll('.notification-card');
+
+                    cards.forEach(card => {
+                        switch(filter) {
+                            case 'all':
+                                card.style.display = 'block';
+                                break;
+                            case 'unread':
+                                if (card.classList.contains('unread')) {
+                                    card.style.display = 'block';
+                                } else {
+                                    card.style.display = 'none';
+                                }
+                                break;
+                            default:
+                                if (card.dataset.notificationType === filter) {
+                                    card.style.display = 'block';
+                                } else {
+                                    card.style.display = 'none';
+                                }
+                        }
+
+                        // Animation de réapparition
+                        if (card.style.display === 'block') {
+                            card.style.opacity = '0';
+                            card.style.transform = 'translateY(10px)';
+                            setTimeout(() => {
+                                card.style.transition = 'all 0.3s ease';
+                                card.style.opacity = '1';
+                                card.style.transform = 'translateY(0)';
+                            }, 10);
+                        }
+                    });
+                });
+            });
+
+            // Système de notation par étoiles
+            document.querySelectorAll('.rating-stars').forEach(starsContainer => {
+                const stars = starsContainer.querySelectorAll('.rating-star');
+                const hiddenInput = document.getElementById(starsContainer.closest('form').querySelector('input[name="score"]').id);
+
+                stars.forEach(star => {
+                    star.addEventListener('click', function() {
+                        const value = this.dataset.value;
+                        hiddenInput.value = value;
+
+                        // Mettre à jour l'affichage des étoiles
+                        stars.forEach(s => {
+                            if (s.dataset.value <= value) {
+                                s.style.color = '#ffc107'; // jaune pour les étoiles sélectionnées
+                            } else {
+                                s.style.color = '#ddd'; // gris pour les autres
+                            }
+                        });
+                    });
+                });
+            });
+
+            // Marquer toutes les notifications comme lues
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('mark-all-read')) {
+                    fetch('{{ path("notification_mark_read", {"id": "all"}) }}'.replace('all', 'all'), {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        }
+                    })
+                        .then(response => {
+                            if (response.ok) {
+                                location.reload();
+                            }
+                        });
+                }
+            });
+        });
+        document.querySelectorAll('.mark-read-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const id = this.dataset.id;
+                fetch('{{ path("notification_mark_read", {"id": 0}) }}'.replace('/0', '/' + id), {
+                    method: 'POST',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token("mark_read") }}'
+                    }
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if(data.success) {
+                            // Changer le texte
+                            const card = btn.closest('.notification-card');
+                            card.querySelector('.notification-status').innerHTML =
+                                '<span class="text-success"><i class="bi bi-check-circle"></i> Lu</span>';
+                            // Supprimer le bouton
+                            btn.remove();
+                        }
+                    });
+            });
+        });
+    </script>
+{% endblock %}
